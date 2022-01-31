@@ -1,0 +1,37 @@
+﻿<MatDialog @bind-IsOpen="@Model.IsOpenConcurrencyModalDialog" CanBeClosed="false">
+    <MatDialogTitle Class="diHeader">
+        <h3>Info zum aufgetretenen Systemfehler</h3>
+        <div class="btn-group">
+            <button class="btn btn-nav" type="button" @onclick="@CloseDialog">
+                <i class="glyphicon glyphicon-remove"></i>
+            </button>
+        </div>
+        <hr />
+    </MatDialogTitle>
+    <MatDialogContent>
+        <div class="h-100">           
+            <div>
+                <label>@Model.ExText</label>
+            </div>
+            <div class="btn-group mt-4 float-right">
+                <button @onclick="@(() =>
+                                  {
+                                      Model.Reload();
+                                      CloseDialog();
+                                  })" class="btn btn-outline-primary btn-nav">Reload</button>
+                <span @onclick="@CloseDialog" class="btn btn-outline-primary btn-nav">Close</span>
+            </div>
+
+        </div>
+    </MatDialogContent>
+</MatDialog>
+@code {
+
+    [Parameter] public ConcurrencyExceptionModel Model { get; set; }
+
+    private void CloseDialog()
+    {
+        Model.IsOpenConcurrencyModalDialog = false;
+    }
+
+}

@@ -1,0 +1,24 @@
+﻿@inject NavigationManager UriHelper
+
+<SideBarMenu>
+    <span class="btn mb-2">
+        <span @onclick="@(()=>UriHelper.NavigateTo(UriHelper.BaseUri + "system/errors", true))" style="color: black;">
+            <i class="glyphicon glyphicon-list-alt"></i>
+            <span class="titleMenuBtn">System Errors</span>
+        </span>
+    </span>
+    <span class="btn mb-2">
+        <span @onclick="@(()=>UriHelper.NavigateTo(UriHelper.BaseUri + "system/usermsgerrors", true))" style="color: black;">
+            <i class="glyphicon glyphicon-th-list"></i>
+            <span class="titleMenuBtn">User Msg Errors</span>
+        </span>
+    </span>
+</SideBarMenu>
+
+<div class="content ml-n3 mt-n3 pt-3 cntLeftSidebar">
+    @ChildContent
+</div>
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+}

@@ -1,0 +1,15 @@
+﻿<div class="sidebar ml-n3 mt-n3 pt-3 @(CssMenu?"fullsize":"")">
+    <span class="btn ml-1 mb-2 mt-2" @onclick="@(() => { CssMenu = !CssMenu; StateHasChanged(); })">
+        <span class="glyphicon glyphicon-list" style="margin-right: 2px;"></span>
+    </span>
+    <div class="btn-content ml-1">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    private bool CssMenu { get; set; } = false;
+}
+

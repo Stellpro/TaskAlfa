@@ -1,0 +1,15 @@
+﻿@page "/system/usermsgerrors"
+@inherits UserMsgErrorLogPageViewModel
+
+@if (!IsFailed)
+{
+    <SideMenuSystem>
+        <h3>System</h3>
+        <ErrorLogComponent Model="@Model" IsUserMsg="true" Remove="@Remove"></ErrorLogComponent>
+    </SideMenuSystem>
+}
+else if (IsFailed)
+{
+    <ErrorComponent Model="@ErrorModel" />
+
+}

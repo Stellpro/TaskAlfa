@@ -1,0 +1,90 @@
+﻿@using TaskAlfa.Data.ItemViewModels;
+<div>
+    <MatDialog @bind-IsOpen="@ViewModel.DialogIsOpen" CanBeClosed="false">
+        <EditForm Model="ViewModel.Model" OnValidSubmit="@(e => { Save.InvokeAsync(ViewModel.Model); })" style="width:500px">
+            <MatDialogTitle class="diHeader">
+                <h3>Task</h3>
+                <div class="btn-group">
+                    @if (ViewModel.IsConcurrencyError)
+                    {<MatDialog @bind-IsOpen="@ViewModel.IsConcurrencyError" CanBeClosed="false">
+                            <span class="btn btn-nav btn-primary mr-1" @onclick="@(e => Reload.InvokeAsync(ViewModel.Model))">Please Reload. This entry has been changed</span>
+                        </MatDialog> }
+                    else
+                    {
+                        <input type="submit" value="Speichern" class="btn btn-nav btn-primary mr-1" style="float: right;" />
+                    }
+                    <span class="btn btn-nav" @onclick="@(e => { ViewModel.DialogIsOpen = false; })">X</span>
+                </div>
+                <hr />
+            </MatDialogTitle>
+            <MatDialogContent>
+                <DataAnnotationsValidator />
+                <div>
+
+                    @*<EditUpdateErrorText IsShow="@ViewModel.IsConcurrencyError" Text="@Globals.ExceptionText[ExeptionTypeEnum.Concurrency]" />
+                        <EditUpdateErrorText IsShow="@(!string.IsNullOrEmpty(ViewModel.ErrorString))" Text="@ViewModel.ErrorString" />*@
+
+                    <div class="form-group row mb-1">
+                        <label for="TaskName" class="col-3 pl-0">TaskName</label>
+                        <InputText @bind-Value="@ViewModel.Model.TaskName" Class="form-control form-control-sm col-9" id="Bezeichnung"></InputText>
+                        <ValidationMessage For="@(() => ViewModel.Model.TaskName)" />
+                    </div>
+
+                    <div class="form-group row mb-1">
+                        <span style="margin-right:56px">Statuse</span>
+                        <div class="col2">
+                            @if (ViewModel.TaskStatusIdModel == null)
+                            {
+                                <InputSelect @bind-Value="ViewModel.Model.TaskStatusId">
+                                    @foreach (var selectValue in ViewModel.StatusModel)
+                                        {
+                                        <option value="@selectValue.TaskStatusId">
+                                            @selectValue.StatusName
+                                        </option>
+                                        }
+                                </InputSelect>
+                            }
+                            else
+                            {
+                                <InputSelect @bind-Value="ViewModel.Model.TaskStatusId">
+                                    @foreach (var selectValue in ViewModel.StatusModel)
+                                        {
+                                        <option value="@selectValue.TaskStatusId">
+                                            @selectValue.StatusName
+                                        </option>
+                                        }
+                                </InputSelect>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-1">
+                        <label for="PlanDuration" class="col-3 pl-0">PlanDuration</label>
+                        <InputNumber @bind-Value="@ViewModel.Model.PlanDuration" Class="form-control form-control-sm col-9" id="Konto"></InputNumber>
+                        <ValidationMessage For="@(() => ViewModel.Model.PlanDuration)" />
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="RealDuration" class="col-3 pl-0">RealDuration</label>
+                        <InputNumber @bind-Value="@ViewModel.Model.RealDuration" Class="form-control form-control-sm col-9" id="Kommentar"></InputNumber>
+                        <ValidationMessage For="@(() => ViewModel.Model.RealDuration)" />
+                    </div>
+
+                </div>
+            </MatDialogContent>
+        </EditForm>
+    </MatDialog>
+</div>
+@code {
+    [Parameter]
+    public EditTaskItemViewModel ViewModel { get; set; }
+
+    [Parameter]
+    public EventCallback<TaskItemViewModel> Save { get; set; }
+
+    [Parameter]
+    public EventCallback<TaskItemViewModel> Reload { get; set; }
+
+}
+@code {
+
+}

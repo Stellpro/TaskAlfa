@@ -1,0 +1,110 @@
+﻿@using TaskAlfa.PagesModels.SystemPage
+
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th><SortIcon Column="LogApplicationErrorId" Title="Id" Sort="@Sorting"></SortIcon></th>
+            <th class="w-10"><SortIcon Column="UserData" Title="Benutzer" Sort="@Sorting"></SortIcon></th>
+            <th class="w-10"><SortIcon Column="InsertDate" Title="Datum" Sort="@Sorting"></SortIcon></th>
+            <th>Error</th>
+            @if (IsUserMsg)
+            {
+                <th class="w-30">Message</th>
+            }
+            else
+            {
+                <th><SortIcon Column="BrowserInfo" Title="Browser" Sort="@Sorting"></SortIcon></th>
+                <th class="w-10" title="AppVersion"><SortIcon Column="AppVersion" Title="App" Sort="@Sorting"></SortIcon></th>
+            }
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            <Virtualize Items="@Model" Context="i">
+                <tr>
+                    <td>@i.Id</td>
+                    @*<td>@GetLogUser(i.UserData)</td>*@
+                    <td>@i.InsertDate</td>
+                    <td>@i.ErrorMsg</td>
+                    @if (IsUserMsg)
+                    {
+                        <td>@i.ErrorMsgUser</td>
+                    }
+                    else
+                    {
+                        <td>@i.BrowserInfo</td>
+                        <td>@i.AppVersion</td>
+                    }
+                    <td>
+                        <i class="btn glyphicon glyphicon-inbox" @onclick="@(() => ShowStackTraceDialog(i.ErrorContext))" title="@GetTitle(i.ErrorContext)"></i>
+                    </td>
+                    <td>
+                        <i class="btn glyphicon glyphicon-remove-circle cursor" @onclick="@(() => RemoveAsync(i))"></i>
+                    </td>
+                </tr>
+            </Virtualize>
+        }
+    </tbody>
+</table>
+
+<MatDialog @bind-IsOpen="@IsOpenDialogStackTrace" CanBeClosed="false" Class="bDialog">
+    <MatDialogTitle Class="diHeader">
+        <h3>Änderungen</h3>
+        <div class="btn-group">
+            <button @onclick="@(e => { IsOpenDialogStackTrace = false;})" class="btn btn-nav">X</button>
+        </div>
+    </MatDialogTitle>
+    <MatDialogContent>
+        <div style="font-size:14px;">
+            @TextDialogStackTrace
+        </div>
+    </MatDialogContent>
+</MatDialog>
+@code {
+    [Parameter] public List<ErrorLogModel> Model { get; set; }
+    [Parameter] public bool IsUserMsg { get; set; } = false;
+    [Parameter] public EventCallback<ErrorLogModel> Remove { get; set; }
+
+    private bool IsOpenDialogStackTrace { get; set; }
+    private string TextDialogStackTrace { get; set; }
+
+    protected void Sorting(KeyValuePair<string, string> pair)
+    {
+        Model = pair.Value == "desc" ? Model.OrderByDescending(x => x.GetType().GetProperty(pair.Key).GetValue(x, null)).ToList()
+            : Model.OrderBy(x => x.GetType().GetProperty(pair.Key).GetValue(x, null)).ToList();
+        StateHasChanged();
+    }
+
+    private string GetTitle(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        if (text.Length < 100)
+            return text;
+
+        return text.Substring(0, 100);
+    }
+
+    private void ShowStackTraceDialog(string text)
+    {
+        TextDialogStackTrace = text;
+        IsOpenDialogStackTrace = true;
+    }
+
+    protected static string GetLogUser(string logUser)
+    {
+        if (string.IsNullOrEmpty(logUser))
+            return "IsNullOrEmpty";
+
+        return logUser.IndexOf("@") > 0 ? logUser.Substring(0, logUser.IndexOf("@")) : logUser;
+    }
+
+    public async Task RemoveAsync(ErrorLogModel error)
+    {
+        await Remove.InvokeAsync(error);
+    }
+}

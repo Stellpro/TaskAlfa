@@ -1,0 +1,29 @@
+﻿@page "/system/errors"
+@inherits SystemErrorLogPageViewModel
+
+
+@if (!IsFailed)
+{
+    <SideMenuSystem>
+        <div class="d-flex justify-content-between">
+            <div class="d-flex mb-2">
+                <h3>System</h3>
+              @*<input type="email" @bind-value="@ToEmail" class="form-control form-control-sm mr-1 ml-1" />*@
+                @*<span class="btn btn-nav" @onclick="@SendTestEmail">Send</span>*@
+            </div>
+            <div class="d-flex mb-2">
+                <input type="search" placeholder="Benutzer" class="form-control form-control-sm mr-1" @bind-value="@Filter.UserFltr" @bind-value:event="oninput" />
+                <input type="search" placeholder="Error" class="form-control form-control-sm mr-1" @bind-value="@Filter.ErrorFltr" @bind-value:event="oninput" />
+                <input type="date" @bind-value="@Filter.StartDate" class="form-control form-control-sm mr-1" />
+                <input type="date" @bind-value="@Filter.EndDate" class="form-control form-control-sm mr-1" />
+                <span class="btn btn-nav mr-1" @onclick="@ExportErrors">Export</span>
+                <span class="btn btn-nav" @onclick="@RemoveLogs">Löschen</span>
+            </div>
+        </div>
+        <ErrorLogComponent Model="@Model" Remove="@Remove"></ErrorLogComponent>
+    </SideMenuSystem>
+}
+else if (IsFailed)
+{
+    <ErrorComponent Model="@ErrorModel" />
+}

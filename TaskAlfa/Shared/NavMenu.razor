@@ -1,0 +1,26 @@
+﻿@inject NavigationManager UriHelper
+<div class="top-row px-4" >
+    
+            <div class="row mr-auto">
+                <span class="nav-link" @onclick="@(() => UriHelper.NavigateTo(UriHelper.BaseUri + "BoardStatus", true))">
+                    <span class="glyphicon glyphicon-sign" aria-hidden="true"></span>BoardStatus
+                </span>*
+                <span class="nav-link" @onclick="@(() => UriHelper.NavigateTo(UriHelper.BaseUri + "TasK", true))">
+                    <span class="glyphicon glyphicon-sign" aria-hidden="true"></span>Task
+                </span>
+                <span class="nav-link" @onclick="@(() => UriHelper.NavigateTo(UriHelper.BaseUri + "system/errors", true))">
+                    <span class="glyphicon glyphicon-sign"  aria-hidden="true"></span>System
+                </span>
+            </div>
+
+    <div class="row align-items-center">
+
+                @*<MatTooltip Context="user_tooltip" Tooltip="@context.User.Identity.Name" Wrap="true">
+                    <span>@context.User.Claims.First(r => r.Type == "Vorname").Value @context.User.Claims.First(r => r.Type == "Nachname").Value, @context.User.Claims.First(r => r.Type == "Standort").Value</span>
+                </MatTooltip>
+                <span class="nav-link nav-link-out" @onclick="@(() => UriHelper.NavigateTo("account/logout", true))">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                </span>*@
+
+    </div>
+</div>

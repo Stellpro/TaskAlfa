@@ -1,0 +1,24 @@
+﻿<div>
+    <MatDialog @bind-IsOpen="@MessageModel.DialogIsOpen" CanBeClosed="false">
+        <EditForm Model="MessageModel" OnValidSubmit="@(() => { MessageModel.DialogIsOpen = false; })">
+            <MatDialogTitle class="diHeader">
+                <h3>Fehler</h3>
+                <div class="btn-group">
+                    <input type="submit" value="Schließen" class="btn btn-nav btn-primary mr-1" style="float: right;" />
+                </div>
+                <hr />
+            </MatDialogTitle>
+            <MatDialogContent>
+                <div style="width:600px;">
+                    @MessageModel.Message
+                </div>
+            </MatDialogContent>
+        </EditForm>
+    </MatDialog>
+</div>
+
+@code {
+    [Parameter] public MessageDialogModel MessageModel { get; set; }
+    [Parameter] public Action Close { get; set; }
+}
+

@@ -1,0 +1,94 @@
+﻿@page "/BoardStatus"
+@using TaskAlfa.Pages.Task
+@inherits ItemViewModel
+<h3>Board</h3>
+<table class="table  table-sm mt-2">
+    <thead>
+        <tr>
+            <th>
+                <SortIcon Column="Status1" Title="Status1" Sort="@Sort"></SortIcon>
+                <i class="btn glyphicon glyphicon-edit " @onclick="@(() => CreateItem(1))"></i>
+            </th>
+            <th >
+                <SortIcon Column="Statuse2" Title="Status2" Sort="@Sort"></SortIcon>
+                <i class="btn glyphicon glyphicon-edit " @onclick="@(() => CreateItem(2))"></i>
+            </th>
+            <th>
+                <SortIcon Column="Statuse3" Title="Status3" Sort="@Sort"></SortIcon>
+                <i class="btn glyphicon glyphicon-edit " @onclick="@(() => CreateItem(3))"></i>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    <td>
+
+        @foreach (var item in BoardItem)
+        {
+
+
+            @if (item.Key == 1)
+            {
+
+                @foreach (var i in item.Value.Where(x => x.TaskStatusId == item.Key).ToList())
+                {
+    <tr>
+        @i.TaskName
+        <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
+        <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Remove(i))"></i>
+    </tr>
+            }
+            }
+        }
+
+
+        </td >
+        <td>
+
+            @foreach (var item in BoardItem)
+            {
+
+
+                @if (item.Key == 2)
+                {
+
+                    @foreach (var i in item.Value.Where(x => x.TaskStatusId == item.Key).ToList())
+                    {
+        <tr>
+            @i.TaskName
+            <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
+            <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Remove(i))"></i>
+        </tr>
+                }
+                }
+            }
+
+
+            </td>
+            <td>
+
+                @foreach (var item in BoardItem)
+                {
+
+
+                    @if (item.Key == 3)
+                    {
+
+                        @foreach (var i in item.Value.Where(x => x.TaskStatusId == item.Key).ToList())
+                        {
+            <tr>
+                @i.TaskName
+                <i class="btn glyphicon glyphicon-edit" @onclick="@(() => Edit(i))"></i>
+                <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Remove(i))"></i>
+            </tr>
+                    }
+                    }
+                }
+
+
+                </td>
+                </tbody>
+            </table>
+            @if (mEditViewModel.DialogIsOpen != null && mCurrentItem != null)
+            {
+                <EditTask ViewModel="@mEditViewModel" Save="@Save" Reload="@Reload" />
+            }
