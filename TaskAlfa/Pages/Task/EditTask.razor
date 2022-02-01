@@ -25,17 +25,18 @@
                         <EditUpdateErrorText IsShow="@(!string.IsNullOrEmpty(ViewModel.ErrorString))" Text="@ViewModel.ErrorString" />*@
 
                     <div class="form-group row mb-1">
-                        <label for="TaskName" class="col-3 pl-0">TaskName</label>
-                        <InputText @bind-Value="@ViewModel.Model.TaskName" Class="form-control form-control-sm col-9" id="Bezeichnung"></InputText>
+                        <label for="TaskName" style="margin-right:150px" class="col-3 pl-0">TaskName</label>
+                        <InputText @bind-Value="@ViewModel.Model.TaskName" Class="form-control form-control-sm col-5" id="Bezeichnung"></InputText>
                         <ValidationMessage For="@(() => ViewModel.Model.TaskName)" />
                     </div>
 
                     <div class="form-group row mb-1">
-                        <span style="margin-right:56px">Statuse</span>
+                        <span style="margin-right:206px">Statuse</span>
                         <div class="col2">
                             @if (ViewModel.TaskStatusIdModel == null)
                             {
                                 <InputSelect @bind-Value="ViewModel.Model.TaskStatusId">
+                                    <option value="@((int?)null)">---</option>
                                     @foreach (var selectValue in ViewModel.StatusModel)
                                         {
                                         <option value="@selectValue.TaskStatusId">
@@ -59,13 +60,13 @@
                     </div>
 
                     <div class="form-group row mb-1">
-                        <label for="PlanDuration" class="col-3 pl-0">PlanDuration</label>
-                        <InputNumber @bind-Value="@ViewModel.Model.PlanDuration" Class="form-control form-control-sm col-9" id="Konto"></InputNumber>
+                        <label for="PlanDuration"style="margin-right:150px" class="col-3 pl-0">PlanDuration</label>
+                        <InputNumber @bind-Value="@ViewModel.Model.PlanDuration" Class="form-control form-control-sm col-5" id="Konto"step="0.01"></InputNumber>
                         <ValidationMessage For="@(() => ViewModel.Model.PlanDuration)" />
                     </div>
                     <div class="form-group row mb-1">
-                        <label for="RealDuration" class="col-3 pl-0">RealDuration</label>
-                        <InputNumber @bind-Value="@ViewModel.Model.RealDuration" Class="form-control form-control-sm col-9" id="Kommentar"></InputNumber>
+                        <label for="RealDuration" style="margin-right:150px" class="col-3 pl-0" >RealDuration</label>
+                        <InputNumber @bind-Value="@ViewModel.Model.RealDuration" Class="form-control form-control-sm col-5" id="Kommentar"step="0.01"></InputNumber>
                         <ValidationMessage For="@(() => ViewModel.Model.RealDuration)" />
                     </div>
 

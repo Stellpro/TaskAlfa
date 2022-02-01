@@ -9,7 +9,7 @@
                 <SortIcon Column="Status1" Title="Status1" Sort="@Sort"></SortIcon>
                 <i class="btn glyphicon glyphicon-edit " @onclick="@(() => CreateItem(1))"></i>
             </th>
-            <th >
+            <th>
                 <SortIcon Column="Statuse2" Title="Status2" Sort="@Sort"></SortIcon>
                 <i class="btn glyphicon glyphicon-edit " @onclick="@(() => CreateItem(2))"></i>
             </th>
@@ -24,19 +24,36 @@
 
         @foreach (var item in BoardItem)
         {
-
-
             @if (item.Key == 1)
-            {
-
                 @foreach (var i in item.Value.Where(x => x.TaskStatusId == item.Key).ToList())
                 {
-    <tr>
-        @i.TaskName
-        <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
-        <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Remove(i))"></i>
-    </tr>
-            }
+                <tr @ondblclick="@(() => Edit(i))">
+
+                    <MatCard style="min-width: 300px;margin-bottom:10px">
+                        <MatCardContent>
+                            <MatHeadline6 class="p-1 mb-0">
+                                <div class="row">
+                                    <div class="col-7 p-0" style="font-size:14px">
+                                        @i.TaskName
+
+                                    </div>
+                                    @*<div class="col-6" style="font-size:14px"> </div>*@
+                                    <div class="col-5 text-right p-0">
+                                        @*<i class="btn glyphicon glyphicon-eye-open" @onclick="@(()=>PreviewItem(c))"></i>*@
+                                        <i class="btn glyphicon glyphicon-edit" @onclick="@(() => Edit(i))"></i>
+
+                                        <i class="btn glyphicon glyphicon-trash cursor" @onclick="@(() => Remove(i))"></i>
+
+                                    </div>
+                                </div>
+                            </MatHeadline6>
+                            <MatBody2 class="p-1 mb-0 pt-0">
+                                <div class="mb-1"><span style="margin-right:15px">@i.PlanDuration </span> @i.RealDuration</div>
+                            </MatBody2>
+                        </MatCardContent>
+                    </MatCard>
+
+                </tr>
             }
         }
 
@@ -46,19 +63,36 @@
 
             @foreach (var item in BoardItem)
             {
-
-
                 @if (item.Key == 2)
-                {
-
                     @foreach (var i in item.Value.Where(x => x.TaskStatusId == item.Key).ToList())
                     {
-        <tr>
-            @i.TaskName
-            <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
-            <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Remove(i))"></i>
-        </tr>
-                }
+                    <tr @ondblclick="@(() => Edit(i))">
+
+                        <MatCard style="min-width: 300px;margin-bottom:10px">
+                            <MatCardContent>
+                                <MatHeadline6 class="p-1 mb-0">
+                                    <div class="row">
+                                        <div class="col-7 p-0" style="font-size:14px">
+                                            @i.TaskName
+
+                                        </div>
+                                        @*<div class="col-6" style="font-size:14px"> </div>*@
+                                        <div class="col-5 text-right p-0">
+                                            @*<i class="btn glyphicon glyphicon-eye-open" @onclick="@(()=>PreviewItem(c))"></i>*@
+                                            <i class="btn glyphicon glyphicon-edit" @onclick="@(() => Edit(i))"></i>
+
+                                            <i class="btn glyphicon glyphicon-trash cursor" @onclick="@(() => Remove(i))"></i>
+
+                                        </div>
+                                    </div>
+                                </MatHeadline6>
+                                <MatBody2 class="p-1 mb-0 pt-0">
+                                    <div class="mb-1"><span style="margin-right:15px">@i.PlanDuration </span> @i.RealDuration</div>
+                                </MatBody2>
+                            </MatCardContent>
+                        </MatCard>
+
+                    </tr>
                 }
             }
 
@@ -68,22 +102,38 @@
 
                 @foreach (var item in BoardItem)
                 {
-
-
                     @if (item.Key == 3)
-                    {
-
                         @foreach (var i in item.Value.Where(x => x.TaskStatusId == item.Key).ToList())
                         {
-            <tr>
-                @i.TaskName
-                <i class="btn glyphicon glyphicon-edit" @onclick="@(() => Edit(i))"></i>
-                <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Remove(i))"></i>
-            </tr>
-                    }
+                        <tr @ondblclick="@(() => Edit(i))">
+
+                            <MatCard style="min-width: 300px;margin-bottom:10px">
+                                <MatCardContent>
+                                    <MatHeadline6 class="p-1 mb-0">
+                                        <div class="row">
+                                            <div class="col-7 p-0" style="font-size:14px">
+                                                @i.TaskName
+
+                                            </div>
+                                            @*<div class="col-6" style="font-size:14px"> </div>*@
+                                            <div class="col-5 text-right p-0">
+                                                @*<i class="btn glyphicon glyphicon-eye-open" @onclick="@(()=>PreviewItem(c))"></i>*@
+                                                <i class="btn glyphicon glyphicon-edit" @onclick="@(() => Edit(i))"></i>
+
+                                                <i class="btn glyphicon glyphicon-trash cursor" @onclick="@(() => Remove(i))"></i>
+
+                                            </div>
+                                        </div>
+                                    </MatHeadline6>
+                                    <MatBody2 class="p-1 mb-0 pt-0">
+                                        <div class="mb-1"><span style="margin-right:15px">@i.PlanDuration </span> @i.RealDuration</div>
+                                    </MatBody2>
+                                </MatCardContent>
+                            </MatCard>
+
+                        </tr>
                     }
                 }
-
 
                 </td>
                 </tbody>
@@ -91,4 +141,5 @@
             @if (mEditViewModel.DialogIsOpen != null && mCurrentItem != null)
             {
                 <EditTask ViewModel="@mEditViewModel" Save="@Save" Reload="@Reload" />
+                <ConfirmationDialog Model=@ConfirmDialogModel Answer="@ConfirmRemove"></ConfirmationDialog>
             }

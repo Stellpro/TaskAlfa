@@ -8,6 +8,7 @@ using TaskAlfa.Data;
 using TaskAlfa.Data.ItemViewModels;
 using TaskAlfa.Data.Services;
 using TaskAlfa.PageModels;
+using TaskAlfa.Shared;
 
 namespace TaskAlfa.Pages.Task
 {
@@ -19,8 +20,15 @@ namespace TaskAlfa.Pages.Task
         public List<TaskStatusItemViewModel> StatusModel { get; set; } = new List<TaskStatusItemViewModel>();
         protected EditTaskItemViewModel mEditViewModel = new EditTaskItemViewModel();
         public TaskItemViewModel mCurrentItem;
+        public TaskItemViewModel Isdelete;
         protected bool dialogIsOpen = false;
         public Dictionary<int, List<TaskItemViewModel>> BoardItem = new Dictionary<int,List<TaskItemViewModel>>();
+        public ConfirmationDialogModel ConfirmDialogModel = new ConfirmationDialogModel()
+        {
+            IsOpenConfirmation = false,
+            Text = "Are you sure?",
+            Title = "Warning!"
+        };
 
         protected int bezeichnungFiltr { get; set; }
         protected string taskNameFiltr { get; set; }
@@ -118,12 +126,7 @@ namespace TaskAlfa.Pages.Task
             mEditViewModel.StatusModel = StatusModel;
             mEditViewModel.DialogIsOpen = true;
             mEditViewModel.Model = mCurrentItem;
-            foreach (var item in StatusModel)
-            {
-                BoardItem.Add(item.TaskStatusId, Model.Where(x => x.TaskStatusId == item.TaskStatusId).ToList());
-                StateHasChanged();
-            }
-            StateHasChanged();
+
 
 
         }
@@ -164,12 +167,34 @@ namespace TaskAlfa.Pages.Task
         //    {
         //    }
         //}
-        protected void Remove(TaskItemViewModel item)
+        protected async System.Threading.Tasks.Task Remove(TaskItemViewModel item)
         {
             try
             {
-                Service.Remove(item);
-                Model.Remove(item);
+                ConfirmDialogModel.IsOpenConfirmation = true;
+                Isdelete = item;
+                //Service.Remove(item);
+                //Model.Remove(item);
+                //BoardItem.Clear();
+                //foreach (var y in StatusModel)
+                //{
+                //    BoardItem.Add(y.TaskStatusId, Model.Where(x => x.TaskStatusId == y.TaskStatusId).ToList());
+                //    StateHasChanged();
+                //}
+                //StateHasChanged();
+                await System.Threading.Tasks.Task.CompletedTask;
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
+        protected async System.Threading.Tasks.Task ConfirmRemove(bool answer)
+        {
+            if (answer)
+            {
+                Service.Remove(Isdelete);
+                Model.Remove(Isdelete);
                 BoardItem.Clear();
                 foreach (var y in StatusModel)
                 {
@@ -177,13 +202,11 @@ namespace TaskAlfa.Pages.Task
                     StateHasChanged();
                 }
                 StateHasChanged();
-            }
-            catch (Exception e)
-            {
+                await System.Threading.Tasks.Task.CompletedTask;
+
+
             }
         }
-
-
         protected void Restore(TaskItemViewModel item)
         {
             try
@@ -199,6 +222,10 @@ namespace TaskAlfa.Pages.Task
             }
         }
 
+        protected void Deleted()
+        {
+            ConfirmDialogModel.IsOpenConfirmation = true;
+        }
 
         protected void Save(TaskItemViewModel item)
         {
@@ -305,6 +332,7 @@ namespace TaskAlfa.Pages.Task
                   ExceprionProcessing(e, FunctionModelEnum.Trash, item, null);
             }
         }
+       
 
         protected void Sort(KeyValuePair<string, string> pair)
         {

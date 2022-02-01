@@ -1,35 +1,26 @@
-﻿<MatDialog @bind-IsOpen="@IsOpenConfirmation" CanBeClosed="false">
-    <MatDialogTitle Class="diHeader">
-        <h3>@Title</h3>
-        <hr />
-    </MatDialogTitle>
-    <MatDialogContent>
+﻿@using MatBlazor
+
+<MatDialog @bind-IsOpen="@Model.IsOpenConfirmation" CanBeClosed="false">
+    <div class="pl-3 pt-3 pr-3 pb-0">
+        <h3>@Model.Title</h3>
+        <hr class="mt-3 mb-1" />
+    </div>
+    <MatDialogContent Class="p-3">
         <div class="d-flex flex-column justify-content-between h-100">
             <div style="max-width:400px;">
-                @Text
+                @Model.Text @*Окно с подтверждением удаления *@
             </div>
-            <div class="btn-group mt-4 row">
-                <div class="@(BtnYesClass) col-6" @onclick="@(()=> { Answer.InvokeAsync(true); IsOpenConfirmation = false; })">@BtnYes</div>
-                <div class="@(BtnNoClass) col-6" @onclick="@(()=> { Answer.InvokeAsync(false); IsOpenConfirmation = false; })">@BtnNo</div>
+            <div class="btn-group mt-4">
+                <div class="btn btn-outline-danger btn-nav" @onclick="@(()=> {Answer.InvokeAsync(true);Model.IsOpenConfirmation = false; })">@Model.BtnYes</div>
+                <div class="btn btn-nav" @onclick="@(() =>{Answer.InvokeAsync(false);Model.IsOpenConfirmation = false;})">Abbrechen</div>
             </div>
         </div>
     </MatDialogContent>
 </MatDialog>
-
 @code {
-    [Parameter] public string Text { get; set; } = "";
+    [Parameter]
+    public ConfirmationDialogModel Model { get; set; }
 
-    [Parameter] public string Title { get; set; } = "";
-
-    [Parameter] public string BtnYes { get; set; } = "";
-
-    [Parameter] public string BtnNo { get; set; } = "Abbrechen";
-
-    [Parameter] public bool IsOpenConfirmation { get; set; }
-
-    [Parameter] public string BtnYesClass { get; set; } = "btn btn-outline-danger btn-nav";
-
-    [Parameter] public string BtnNoClass { get; set; } = "btn btn-nav";
-
-    [Parameter] public EventCallback<bool> Answer { get; set; }
-}
+    [Parameter]
+    public EventCallback<bool> Answer { get; set; }
+    }

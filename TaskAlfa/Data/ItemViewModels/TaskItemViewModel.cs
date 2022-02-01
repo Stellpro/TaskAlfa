@@ -28,7 +28,7 @@ namespace TaskAlfa.Data.ItemViewModels
         {
             get => item.TaskId;
         }
-        //[Required]
+        [Required]
         public int TaskStatusId
         {
             get => item.TaskStatusId;
@@ -47,6 +47,7 @@ namespace TaskAlfa.Data.ItemViewModels
             get => item.PlanDuration;
             set => item.PlanDuration = value;
         }
+        [Required]
         public double RealDuration
         {
             get => item.RealDuration;
