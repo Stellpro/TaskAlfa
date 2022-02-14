@@ -118,7 +118,13 @@ namespace TaskDb
 
         public TEntity Update(TEntity item)
         {
-            throw new NotImplementedException();
+            _context.Entry(item).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            _context.Entry(item).State = EntityState.Detached;
+            _context.SaveChanges();
+
+            return item;
         }
     }
 }

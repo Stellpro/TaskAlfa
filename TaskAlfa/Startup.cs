@@ -41,6 +41,9 @@ namespace TaskAlfa
             services.AddSingleton<IPushNotificationsQueue, PushNotificationsQueue>();
             services.AddHostedService<PushNotificationsDequeuer>();
             services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
+            services.AddHttpContextAccessor();
+
+            services.AddHttpClient();
             services.AddDbContext<TaskDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AlfaControllingContext")));//Controlling
 

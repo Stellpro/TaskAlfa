@@ -56,7 +56,7 @@ namespace TaskAlfa.Pages.SystemPage
 
 
         protected async System.Threading.Tasks.Task RemoveLogs()
-        {
+        { 
             var result = await MatDialogService.AskAsync("Möchten Sie wirklich alle Einträge für diese Daten löschen?", new string[] { "Ja", "Abbrechen" });
 
             if (result == "Ja")

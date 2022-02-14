@@ -17,10 +17,13 @@
         </div>
     </MatDialogContent>
 </MatDialog>
+<MatDialog @bind-IsOpen="@Model.PrimaryKey" CanBeClosed="false">
+    <span class="btn btn-nav btn-primary mr-1"@onclick="@(e => Model.PrimaryKey = false)">Please delete all posts belonging to this status</span>
+</MatDialog>
 @code {
     [Parameter]
     public ConfirmationDialogModel Model { get; set; }
 
     [Parameter]
     public EventCallback<bool> Answer { get; set; }
-    }
+}

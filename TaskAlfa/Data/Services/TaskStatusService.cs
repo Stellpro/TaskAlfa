@@ -22,9 +22,25 @@ namespace TaskAlfa.Data.Services
         {
             return new TaskStatusItemViewModel(model);
         }
-        
+
+
        
-        
+
+        public TaskStatusItemViewModel Reload(TaskTable item)
+        {
+            var newitem = TaskStatusRepo.Reload(item.TaskStatusId);
+            return Convert(newitem);
+        }
+        public TaskStatusItemViewModel Update(TaskStatusItemViewModel item)
+        {
+            var x = TaskStatusRepo.FindByIdForReload(item.TaskStatusId);
+            x.StatusName = item.StatusName;
+            x.OrderId = item.OrderId;
+            x.IsVisible = item.IsVisible;
+            x.IsDeleted = item.IsDeleted;
+            return Convert(TaskStatusRepo.Update(x, item.Item.RowVersion));
+        }
+
         //public async Task<List<TaskStatusItemViewModel>> GetFiltering(int param)
         //{
         //    var param1 = TaskStatusRepo.GetQuery();
@@ -47,16 +63,34 @@ namespace TaskAlfa.Data.Services
         //    var item = result.Select(x => Convert(x)).ToList();
         //    return item;
         //}
-        //public TaskStatusItemViewModel Create(TaskStatusItemViewModel item)
-        //{
+        public TaskStatusItemViewModel Create(TaskStatusItemViewModel item)
+        {
 
 
-        //    var newitem =
-        //    TaskStatusRepo.Create(item.Item);
-        //    return Convert(newitem);
+            var newitem =
+            TaskStatusRepo.Create(item.Item);
+
+            return Convert(newitem);
 
 
-        //}
+        }
+
+        public TaskStatusItemViewModel UpdateIsDelete(TaskStatusItemViewModel item)
+        {
+            var isDelete = item.IsDeleted;
+            var x = TaskStatusRepo.FindByIdForReload(item.TaskStatusId);
+            if (x == null)
+            {
+
+            }
+            x.IsDeleted = isDelete;
+            return Convert(TaskStatusRepo.Update(x, item.Item.RowVersion));
+        }
+
+        public void Remove(TaskStatusItemViewModel item)
+        {
+            TaskStatusRepo.Remove(item.Item);
+        }
 
 
         public List<TaskStatusItemViewModel> GetList()

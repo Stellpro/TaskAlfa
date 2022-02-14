@@ -15,6 +15,12 @@ namespace TaskDb.Models
         [Column("TaskStatusId")]
         public int TaskStatusId { get; set; }
         public string StatusName { get; set; }
+        public int OrderId { get; set; }
+        public bool IsVisible { get; set; }
+        public bool IsDeleted { get; set; }
+        public int Count { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
         public object Clone()
         {
             return this.MemberwiseClone();

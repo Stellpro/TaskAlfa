@@ -1,0 +1,62 @@
+﻿@using TaskAlfa.Data.ItemViewModels;
+<div>
+    <MatDialog @bind-IsOpen="@ViewModel.DialogIsOpen" CanBeClosed="false">
+        <EditForm Model="ViewModel.TaskStatusModel" OnValidSubmit="@(e => { Save.InvokeAsync(ViewModel.TaskStatusModel); })" style="width:500px">
+            <MatDialogTitle class="diHeader">
+                <h3>Task</h3> 
+                <div class="btn-group">
+                    @if (ViewModel.IsConcurrencyError)
+                    {<MatDialog @bind-IsOpen="@ViewModel.IsConcurrencyError" CanBeClosed="false">
+                            <span class="btn btn-nav btn-primary mr-1" @onclick="@(e => Reload.InvokeAsync(ViewModel.TaskStatusModel))">Please Reload. This entry has been changed</span>
+                        </MatDialog> }
+                    else
+                    {
+                        <input type="submit" value="Speichern" class="btn btn-nav btn-primary mr-1" style="float: right;" />
+                    }
+                    <span class="btn btn-nav" @onclick="@(e => { ViewModel.DialogIsOpen = false; })">X</span>
+                </div>
+                <hr />
+            </MatDialogTitle>
+            <MatDialogContent>
+                <DataAnnotationsValidator />
+                <div>
+
+                    @*<EditUpdateErrorText IsShow="@ViewModel.IsConcurrencyError" Text="@Globals.ExceptionText[ExeptionTypeEnum.Concurrency]" />
+                        <EditUpdateErrorText IsShow="@(!string.IsNullOrEmpty(ViewModel.ErrorString))" Text="@ViewModel.ErrorString" />*@
+
+                    <div class="form-group row mb-1">
+                        <label for="StatuskName" style="margin-right:150px" class="col-3 pl-0">TaskName</label>
+                        <InputText @bind-Value="@ViewModel.TaskStatusModel.StatusName" Class="form-control form-control-sm col-5" id="Bezeichnung"></InputText>
+                        <ValidationMessage For="@(() => ViewModel.TaskStatusModel.StatusName)" />
+                    </div>
+
+                    
+
+                    <div class="form-group row mb-1">
+                        <label for="PlanDuration" style="margin-right:150px" class="col-3 pl-0">OrderId</label>
+                        <InputNumber @bind-Value="@ViewModel.TaskStatusModel.OrderId" Class="form-control form-control-sm col-5" id="Konto" step="0.01"></InputNumber>
+                        <ValidationMessage For="@(() => ViewModel.TaskStatusModel.OrderId)" />
+                    </div>
+                    <div class="form-group row mb-1">
+                        <label for="IsActive" class="col-3 pl-0">Aktiv</label>
+                        <div class="text-left">
+                            <InputCheckbox @bind-Value="@ViewModel.TaskStatusModel.IsVisible" Class="form-control form-control-sm col-9 p-0" id="IsSerienbrief" style="width: 20px;"></InputCheckbox>
+                        </div>
+                        <ValidationMessage For="@(() => ViewModel.TaskStatusModel.IsVisible)" />
+                    </div>
+
+                </div>
+            </MatDialogContent>
+        </EditForm>
+    </MatDialog>
+</div>
+@code {
+    [Parameter]
+    public EditTaskStatusItemViewModel ViewModel { get; set; }
+
+    [Parameter]
+    public EventCallback<TaskStatusItemViewModel> Save { get; set; }
+
+    [Parameter]
+    public EventCallback<TaskStatusItemViewModel> Reload { get; set; }
+}

@@ -12,6 +12,6 @@ namespace TaskAlfa.Shared
         public string Title { get; set; } = "Zertifikat löschen";
         public string BtnYes { get; set; } = "Löschen";
         public bool IsOpenConfirmation { get; set; } = false;
-
+        public bool PrimaryKey { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace TaskAlfa.Pages.Task
         [Inject] private TaskStatusService StatusService { get; set; }
         public List<TaskItemViewModel> Model { get; set; } = new List<TaskItemViewModel>();
         public List<TaskStatusItemViewModel> StatusModel { get; set; } = new List<TaskStatusItemViewModel>();
+        
         protected EditTaskItemViewModel mEditViewModel = new EditTaskItemViewModel();
         public TaskItemViewModel mCurrentItem;
         public TaskItemViewModel Isdelete;
@@ -50,7 +51,7 @@ namespace TaskAlfa.Pages.Task
                 try
                 { 
                     Model = Service.GetList();
-                    StatusModel = StatusService.GetList();
+                    StatusModel = StatusService.GetList();                 
                     foreach (var item in StatusModel)
                     {
                         BoardItem.Add(item.TaskStatusId,Model.Where(x=>x.TaskStatusId==item.TaskStatusId).ToList());

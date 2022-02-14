@@ -5,10 +5,12 @@
                 <span class="nav-link" @onclick="@(() => UriHelper.NavigateTo(UriHelper.BaseUri + "BoardStatus", true))">
                     <span class="glyphicon glyphicon-sign" aria-hidden="true"></span>BoardStatus
                 </span>*
-                <span class="nav-link" @onclick="@(() => UriHelper.NavigateTo(UriHelper.BaseUri + "TasK", true))">
+                <span class="nav-link" @onclick="@(() => UriHelper.NavigateTo(UriHelper.BaseUri + "Task", true))">
                     <span class="glyphicon glyphicon-sign" aria-hidden="true"></span>Task
                 </span>
-                <span class="nav-link" @onclick="@(() => UriHelper.NavigateTo(UriHelper.BaseUri + "system/errors", true))">
+                <span class="nav-link" @onclick="@(() => UriHelper.NavigateTo(UriHelper.BaseUri + "TaskStatus", true))">
+                    <span class="glyphicon glyphicon-sign" aria-hidden="true"></span>TaskStatus
+                </span><span class="nav-link" @onclick="@(() => UriHelper.NavigateTo(UriHelper.BaseUri + "system/errors", true))">
                     <span class="glyphicon glyphicon-sign"  aria-hidden="true"></span>System
                 </span>
             </div>
