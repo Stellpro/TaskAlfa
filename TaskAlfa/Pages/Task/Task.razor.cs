@@ -8,6 +8,8 @@ using TaskAlfa.Data;
 using TaskAlfa.Data.ItemViewModels;
 using TaskAlfa.Data.Services;
 using TaskAlfa.PageModels;
+using TaskAlfa.Reporting;
+using TaskAlfa.Reporting.Models;
 using TaskAlfa.Shared;
 
 namespace TaskAlfa.Pages.Task
@@ -18,7 +20,8 @@ namespace TaskAlfa.Pages.Task
         [Inject] private TaskStatusService StatusService { get; set; }
         public List<TaskItemViewModel> Model { get; set; } = new List<TaskItemViewModel>();
         public List<TaskStatusItemViewModel> StatusModel { get; set; } = new List<TaskStatusItemViewModel>();
-        
+        public int CountStatus;
+        public int SizeCard;
         protected EditTaskItemViewModel mEditViewModel = new EditTaskItemViewModel();
         public TaskItemViewModel mCurrentItem;
         public TaskItemViewModel Isdelete;
@@ -130,6 +133,31 @@ namespace TaskAlfa.Pages.Task
 
 
 
+        }
+        public void CreateReport()
+        {
+            TaskAlfaReportModel model = new TaskAlfaReportModel();
+            model.Block = GetTaskList();
+
+            byte[] file = new XtraReportEngine().CreateAnschreibenEmpfehlungReport(model, 2);
+
+            System.IO.File.WriteAllBytes(@"C:\Users\stellpro\Desktop\TaskAlfa.pdf", file);
+        }
+
+        private List<TaskAlfaItemReportModel> GetTaskList()
+        {
+            var returnList = new List<TaskAlfaItemReportModel>();
+            foreach (var item in Model)
+            {
+                returnList.Add(new TaskAlfaItemReportModel
+                {
+                    TaskName = item.TaskName,
+                    PlanDuration = item.PlanDuration,
+                    RealDuration = item.RealDuration,
+                    StatusName = StatusModel.Where(X => X.TaskStatusId == item.TaskStatusId).FirstOrDefault()?.StatusName
+                });
+            }
+            return returnList;
         }
         public void CreateItem(int i)
         {

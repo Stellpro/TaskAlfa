@@ -2,66 +2,75 @@
 @using TaskAlfa.Pages.Task
 @inherits ItemViewModel
 <h3>Board</h3>
-<table class="table  table-sm mt-2">
-    <thead>
-        <tr>
-            @foreach (var item in StatusModel.OrderBy(x => x.OrderId).ToList())
-            {
-            <th>
-                <SortIcon Column="@item.StatusName" Title="@item.StatusName" Sort="@Sort"></SortIcon>               
-                <i class="btn glyphicon glyphicon-plus" @onclick="@(() => CreateItem(item.TaskStatusId))"></i>
-            </th>
 
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var y in StatusModel.OrderBy(x => x.OrderId).ToList())
+    //
+
+    <div class="row">
+        @foreach (var item in StatusModel.OrderBy(x => x.OrderId).ToList())
         {
 
 
-        <td style="width:auto">
-
-            @foreach (var item in BoardItem)
+            @if (item.IsVisible)
             {
-                @if (item.Key == y.TaskStatusId)
-                    @foreach (var i in item.Value.Where(x => x.TaskStatusId == item.Key).ToList())
-                    {
-                    <tr @ondblclick="@(() => Edit(i))" style="width: -moz-available;display: inline-block;">
 
-                        <MatCard style="margin-bottom:10px" Class="fullsize">
-                            <MatCardContent>
-                                <MatHeadline6 class="p-1 mb-0">
-                                    <div class="row">
-                                        <div class="col-7 p-0" style="font-size:14px">
-                                            @i.TaskName
 
-                                        </div>
-                                        
-                                    <div class="col-5 text-right p-0">
-                                        <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>                                     
-                                        <i class="btn glyphicon glyphicon-trash cursor" @onclick="@(() => Remove(i))"></i>
+                <div class="col" style="width:200px">
+                    <SortIcon Column="@item.StatusName" Title="@item.StatusName" Sort="@Sort"></SortIcon>
+                    <i class="btn glyphicon glyphicon-plus" @onclick="@(() => CreateItem(item.TaskStatusId))"></i>
+                </div>
 
-                                    </div>
-                                    </div>
-                                </MatHeadline6>
-                                <MatBody2 class="p-1 mb-0 pt-0">
-                                    <div class="mb-1"><span style="margin-right:15px">@i.PlanDuration </span> @i.RealDuration</div>
-                                </MatBody2>
-                            </MatCardContent>
-                        </MatCard>
-
-                    </tr>
-                }
             }
-
-
-            </td >
         }
-                </tbody>
-            </table>
-            @if (mEditViewModel.DialogIsOpen != null && mCurrentItem != null)
+    </div>
+    <div class="row">
+        @foreach (var y in StatusModel.OrderBy(x => x.OrderId).ToList())
+        {
+            @if (y.IsVisible)
             {
-                <EditTask ViewModel="@mEditViewModel" Save="@Save" Reload="@Reload" />
-                <ConfirmationDialog Model=@ConfirmDialogModel Answer="@ConfirmRemove"></ConfirmationDialog>
+
+            <div class="col" style="width:auto">
+
+                @foreach (var item in BoardItem)
+                {
+                    @if (item.Key == y.TaskStatusId)
+                        @foreach (var i in item.Value.Where(x => x.TaskStatusId == item.Key).ToList())
+                        {
+                        <div @ondblclick="@(() => Edit(i))" style="width: -moz-available;display: inline-block;">
+
+                            <MatCard style="margin-bottom:10px" Class="fullsize">
+                                <MatCardContent>
+                                    <MatHeadline6 class="p-1 mb-0">
+                                        <div class="row">
+                                            <div class="col-7 p-0" style="font-size:14px">
+                                                @i.TaskName
+
+                                            </div>
+
+                                            <div class="col-5 text-right p-0">
+                                                <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
+                                                <i class="btn glyphicon glyphicon-trash cursor" @onclick="@(() => Remove(i))"></i>
+
+                                            </div>
+                                        </div>
+                                    </MatHeadline6>
+                                    <MatBody2 class="p-1 mb-0 pt-0">
+                                        <div class="mb-1"><span style="margin-right:15px">@i.PlanDuration </span> @i.RealDuration</div>
+                                    </MatBody2>
+                                </MatCardContent>
+                            </MatCard>
+
+                        </div>
+                    }
+                }
+
+
+                </div >
             }
+        }
+        
+    </div>
+    @if (mEditViewModel.DialogIsOpen != null && mCurrentItem != null)
+    {
+        <EditTask ViewModel="@mEditViewModel" Save="@Save" Reload="@Reload" />
+        <ConfirmationDialog Model=@ConfirmDialogModel Answer="@ConfirmRemove"></ConfirmationDialog>
+    }

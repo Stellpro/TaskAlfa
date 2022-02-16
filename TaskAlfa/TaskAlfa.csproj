@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AlfaControlingDb\AlfaControlingDb.csproj" />
     <ProjectReference Include="..\DbRepository\DbRepository.csproj" />
+    <ProjectReference Include="..\TaskAlfa.Reporting\TaskAlfa.Reporting.csproj" />
     <ProjectReference Include="..\TaskDb\TaskDb.csproj" />
   </ItemGroup>
 

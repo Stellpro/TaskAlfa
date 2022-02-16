@@ -3,18 +3,20 @@
 <h3>Task</h3>
 <div class="d-flex justify-content-between mb-1">
     <div class="row">
-        <span class="btn btn-nav" @onclick="@(e=>CreateItem())">Hinzufügen</span>
+        <span class="btn btn-nav" @onclick="@(e=>CreateItem())" style="margin-right:5px">Hinzufügen</span>
+
+        <span class="btn btn-nav" @onclick="@(e=>CreateReport())">PDf</span>
     </div>
     <div class="form-inline float-right align-items-center mb-1">
         <input style="width:150px" type="text" class="form-control form-control-sm mr-2" placeholder="Bezeichnung.." @bind-value="@TasknameFiltr" @onkeyup="@HandleKeyUp" />
     </div>
     <div class="form-inline float-right align-items-center mb-1">
-        <select @bind="BezeichnungFiltr">
-            <option value="0">TaskName</option>
+        <select @bind="BezeichnungFiltr" Class="form-control form-control-sm ">
+            <option value="0">TaskStatus</option>
             @foreach (var selectValue in Model)
             {
                 <option value="@selectValue.TaskId">
-                    @selectValue.TaskName
+                    @selectValue.TaskStatusId
                 </option>
             }
         </select>

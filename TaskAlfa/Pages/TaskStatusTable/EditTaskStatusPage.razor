@@ -25,7 +25,7 @@
                         <EditUpdateErrorText IsShow="@(!string.IsNullOrEmpty(ViewModel.ErrorString))" Text="@ViewModel.ErrorString" />*@
 
                     <div class="form-group row mb-1">
-                        <label for="StatuskName" style="margin-right:150px" class="col-3 pl-0">TaskName</label>
+                        <label for="StatuskName"  class="col-3 pl-0">TaskName</label>
                         <InputText @bind-Value="@ViewModel.TaskStatusModel.StatusName" Class="form-control form-control-sm col-5" id="Bezeichnung"></InputText>
                         <ValidationMessage For="@(() => ViewModel.TaskStatusModel.StatusName)" />
                     </div>
@@ -33,12 +33,12 @@
                     
 
                     <div class="form-group row mb-1">
-                        <label for="PlanDuration" style="margin-right:150px" class="col-3 pl-0">OrderId</label>
+                        <label for="PlanDuration"  class="col-3 pl-0">OrderId</label>
                         <InputNumber @bind-Value="@ViewModel.TaskStatusModel.OrderId" Class="form-control form-control-sm col-5" id="Konto" step="0.01"></InputNumber>
                         <ValidationMessage For="@(() => ViewModel.TaskStatusModel.OrderId)" />
                     </div>
                     <div class="form-group row mb-1">
-                        <label for="IsActive" class="col-3 pl-0">Aktiv</label>
+                        <label for="IsActive" class="col-3 pl-0">IsVisible</label>
                         <div class="text-left">
                             <InputCheckbox @bind-Value="@ViewModel.TaskStatusModel.IsVisible" Class="form-control form-control-sm col-9 p-0" id="IsSerienbrief" style="width: 20px;"></InputCheckbox>
                         </div>
