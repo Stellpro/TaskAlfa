@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlfaControlingDb", "AlfaCon
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reporting", "Reporting", "{EE8B8CCF-6F37-446F-BA26-08FE905C563D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskAlfa.Reporting", "TaskAlfa.Reporting\TaskAlfa.Reporting.csproj", "{B476F391-9F65-4BCA-81BC-08D06EBFE1B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskAlfa.Reporting", "TaskAlfa.Reporting\TaskAlfa.Reporting.csproj", "{B476F391-9F65-4BCA-81BC-08D06EBFE1B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskAlfa.Reporting.Runner", "TaskAlfa.Reporting.Runner\TaskAlfa.Reporting.Runner.csproj", "{66349442-581E-423D-A554-7F1526941286}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskAlfa.Reporting.Runner", "TaskAlfa.Reporting.Runner\TaskAlfa.Reporting.Runner.csproj", "{66349442-581E-423D-A554-7F1526941286}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

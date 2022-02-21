@@ -39,6 +39,9 @@ namespace TaskAlfa.Data.Services
             x.TaskName = item.TaskName;
             x.PlanDuration = item.PlanDuration;
             x.RealDuration = item.RealDuration;
+            x.Description = item.Description;
+            x.FileName = item.FileName;
+            x.Dokument = item.Dokument;
             return Convert(TaskRepo.Update(x, item.Item.RowVersion));
         }
         public TaskItemViewModel UpdateIsDelete(TaskItemViewModel item)

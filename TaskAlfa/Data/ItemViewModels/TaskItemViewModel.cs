@@ -7,7 +7,7 @@ using TaskDb.Models;
 
 namespace TaskAlfa.Data.ItemViewModels
 {
-    public class TaskItemViewModel:ICloneable, IIsRefreshed
+    public class TaskItemViewModel : ICloneable, IIsRefreshed
     {
         private TaskTable item { get; set; }
         public TaskTable Item
@@ -57,6 +57,21 @@ namespace TaskAlfa.Data.ItemViewModels
         {
             get => item.IsDeleted;
             set => item.IsDeleted = value;
+        }
+        public string Description
+        {
+            get => item.Description;
+            set => item.Description = value;
+        }
+        public string FileName
+        {
+            get => item.FileName;
+            set => item.FileName = value;
+        }
+        public byte[] Dokument
+        {
+            get => item.Dokument;
+            set => item.Dokument = value;
         }
         public List<ChangeLog> ChangeLog { get; set; }
         public bool IsRefreshed { get; set; } = false;

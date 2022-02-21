@@ -126,7 +126,20 @@ namespace TaskAlfa.Pages.TaskStatusTable
         {
             ConfirmDialogModel.IsOpenConfirmation = true;
         }
+        public void ChangeVisible(TaskStatusItemViewModel item)
+        {
+            if (item.IsVisible)
+            {
+                item.IsVisible = false;
+                
+            }
+            else 
+            { 
+                item.IsVisible = true;
+            }
+           Update(item);
 
+        }
         protected void Save(TaskStatusItemViewModel item)
         {
             try
@@ -137,12 +150,6 @@ namespace TaskAlfa.Pages.TaskStatusTable
                     var newItem = Update(item);
                     var index = StatusModel.FindIndex(x => x.TaskStatusId == this.mCurrentItem.TaskStatusId);
                     StatusModel[index] = newItem;
-                    //BoardItem.Clear();
-                    //foreach (var i in StatusModel)
-                    //{
-                    //    BoardItem.Add(i.TaskStatusId, Model.Where(x => x.TaskStatusId == i.TaskStatusId).ToList());
-                    //    StateHasChanged();
-                    //}
                     StateHasChanged();
                 }
                 else

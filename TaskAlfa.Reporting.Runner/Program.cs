@@ -13,9 +13,7 @@ namespace TaskAlfa.Reporting.Runner
             model.Block = new List<TaskAlfaItemReportModel>();
             model.Block.Add(new TaskAlfaItemReportModel()
             {
-                Text=@"Буря мглою, небо кроет,
-Вихри Снежные крутя;",
-                Title = "Зимний вечер"
+               
             });
 
            

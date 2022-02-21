@@ -15,7 +15,9 @@ using TaskAlfa.Shared;
 namespace TaskAlfa.Pages.Task
 {
     public class ItemViewModel : BaseViewModel
-    {
+    {   
+        public bool dialogIsOpenAdd { get; set; }
+        
         [Inject] private TaskService Service { get; set; }
         [Inject] private TaskStatusService StatusService { get; set; }
         public List<TaskItemViewModel> Model { get; set; } = new List<TaskItemViewModel>();
@@ -25,8 +27,10 @@ namespace TaskAlfa.Pages.Task
         protected EditTaskItemViewModel mEditViewModel = new EditTaskItemViewModel();
         public TaskItemViewModel mCurrentItem;
         public TaskItemViewModel Isdelete;
+        public TaskItemViewModel AddModel;
         protected bool dialogIsOpen = false;
         public Dictionary<int, List<TaskItemViewModel>> BoardItem = new Dictionary<int,List<TaskItemViewModel>>();
+        public int Id { get; set; }
         public ConfirmationDialogModel ConfirmDialogModel = new ConfirmationDialogModel()
         {
             IsOpenConfirmation = false,
@@ -75,7 +79,14 @@ namespace TaskAlfa.Pages.Task
                 }
             }
         }
-
+        public void Visible(TaskStatusItemViewModel item)
+        {
+            item.IsVisible = false;
+            var index = StatusModel.FindIndex(x => x.TaskStatusId == item.TaskStatusId);
+            StatusModel[index] = item;
+            StatusService.Update(item);
+            StateHasChanged();
+        }
         protected async void StartSearch()
         {
             try
@@ -184,33 +195,25 @@ namespace TaskAlfa.Pages.Task
         }
 
 
-        //protected void Remove(TaskItemViewModel item)
-        //{
-        //    try
-        //    {
-        //        Service.Remove(item);
-        //        Model.Remove(item);
-                
-        //    }
-        //    catch (Exception e)
-        //    {
-        //    }
-        //}
+        protected void Removeed(TaskItemViewModel item)
+        {
+            try
+            {
+                Service.Remove(item);
+                Model.Remove(item);
+
+            }
+            catch (Exception e)
+            {
+            }
+        }
         protected async System.Threading.Tasks.Task Remove(TaskItemViewModel item)
         {
             try
             {
                 ConfirmDialogModel.IsOpenConfirmation = true;
                 Isdelete = item;
-                //Service.Remove(item);
-                //Model.Remove(item);
-                //BoardItem.Clear();
-                //foreach (var y in StatusModel)
-                //{
-                //    BoardItem.Add(y.TaskStatusId, Model.Where(x => x.TaskStatusId == y.TaskStatusId).ToList());
-                //    StateHasChanged();
-                //}
-                //StateHasChanged();
+
                 await System.Threading.Tasks.Task.CompletedTask;
             }
             catch (Exception e)
@@ -308,7 +311,38 @@ namespace TaskAlfa.Pages.Task
             }
         }
 
+        public void UpdateFile(TaskItemViewModel item)
+        {
+            if (item.TaskId == 0)
+            {
 
+                
+
+            }
+            else
+            {
+
+                try
+                {
+                    var index = Model.FindIndex(x => x.TaskId == item.TaskId);
+                    Model[index] = item;
+                    Service.Update(item);
+                    dialogIsOpenAdd = false;
+
+                }
+
+
+                catch (DbUpdateConcurrencyException e)
+                {
+                    ExceprionProcessing(e, FunctionModelEnum.Update, mCurrentItem, mEditViewModel, "Update");
+
+                    mEditViewModel.IsConcurrencyError = true;
+                     mCurrentItem = Service.Reload(item.Item);
+
+                }
+
+            }
+        }
         public TaskItemViewModel Update(TaskItemViewModel item)
         {
             if (item.TaskId == 0)

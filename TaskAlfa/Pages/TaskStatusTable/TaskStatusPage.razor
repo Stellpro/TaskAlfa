@@ -40,38 +40,49 @@
         <tbody>
             @foreach (var i in StatusModel)
             {
-                <tr>
-                    <td>@i.TaskStatusId</td>
-                    <td style="text-align:center">
-                        @i.StatusName
-                    </td>
+            <tr>
+                <td>@i.TaskStatusId</td>
+                <td style="text-align:center">
+                    @i.StatusName
+                </td>
 
-                    <td width="500" style="text-align:center">
-                        @i.OrderId
-                    </td>
-                    <td style="text-align:center">
-                        @i.Count
-                    </td>
-
+                <td width="500" style="text-align:center">
+                    @i.OrderId
+                </td>
+                <td style="text-align:center">
+                    @i.Count
+                </td>
+                @if (i.IsVisible)
+                {
                     <td width="100" align="center">
-                        <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
+                        <i class="btn glyphicon glyphicon-ok-circle" @onclick="@(() =>ChangeVisible(i))"></i>
                     </td>
-                    @if (i.Count == 0)
-                    {
-                        <td width="63">
-                            <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Remove(i))" disabled></i>
-                        </td>
-                    }
-                    else
-                    {
-                        <td width="63">
-                            <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Remove(i))"></i>
-                        </td>
-                    }
 
-                    @*}*@
-                    @*<td><i class="align-top"><LogComponent Logs="@i.ChangeLog"></LogComponent></i></td>*@
-                </tr>
+                }
+                else
+                {
+                    <td width="100" align="center">
+                        <i class="btn glyphicon glyphicon-ok-circle"style="color:red " @onclick="@(() => ChangeVisible(i))"></i>
+                    </td>
+
+                }
+                <td width="100" align="center">
+                    <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
+                </td>
+                @if (i.Count == 0)
+                {
+                    <td width="63">
+                        <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Remove(i))" disabled></i>
+                    </td>
+                }
+                else
+                {
+                    <td width="63">
+                        <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Remove(i))"></i>
+                    </td>
+                }
+
+            </tr>
             }
 
         </tbody>

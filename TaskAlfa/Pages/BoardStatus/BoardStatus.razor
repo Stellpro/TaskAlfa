@@ -3,30 +3,47 @@
 @inherits ItemViewModel
 <h3>Board</h3>
 
-    //
+<div class="row">
+    @foreach (var item in StatusModel.OrderBy(x => x.OrderId).ToList())
+    {
 
-    <div class="row">
-        @foreach (var item in StatusModel.OrderBy(x => x.OrderId).ToList())
+
+        @if (item.IsVisible)
         {
+            var count = 0;
 
+            <div class="col" style="width:200px">
+                <SortIcon Column="@item.StatusName" Title="@item.StatusName" Sort="@Sort"></SortIcon>
+                <i class="btn glyphicon glyphicon-plus" @onclick="@(() => CreateItem(item.TaskStatusId))"></i>
+                @foreach (var y in BoardItem)
+                {
+                    @if (y.Key == item.TaskStatusId)
+                    {
+                        @foreach (var i in y.Value.Where(x => x.TaskStatusId == y.Key).ToList())
+                        {
+                            count++;
+                        }
+                    }
+                }
 
-            @if (item.IsVisible)
-            {
+                @if (count != 0)
+                {
+                    <span>(@count)</span>
+                }
+                <select class="form" style="margin-left:5px">
+                    <option>Visible</option>
+                    <option @onclick="@(e => Visible(item))">InVisible</option>
+                </select>
+            </div>
 
-
-                <div class="col" style="width:200px">
-                    <SortIcon Column="@item.StatusName" Title="@item.StatusName" Sort="@Sort"></SortIcon>
-                    <i class="btn glyphicon glyphicon-plus" @onclick="@(() => CreateItem(item.TaskStatusId))"></i>
-                </div>
-
-            }
         }
-    </div>
-    <div class="row">
-        @foreach (var y in StatusModel.OrderBy(x => x.OrderId).ToList())
+    }
+</div>
+<div class="row">
+    @foreach (var y in StatusModel.OrderBy(x => x.OrderId).ToList())
+    {
+        @if (y.IsVisible)
         {
-            @if (y.IsVisible)
-            {
 
             <div class="col" style="width:auto">
 
@@ -35,42 +52,75 @@
                     @if (item.Key == y.TaskStatusId)
                         @foreach (var i in item.Value.Where(x => x.TaskStatusId == item.Key).ToList())
                         {
-                        <div @ondblclick="@(() => Edit(i))" style="width: -moz-available;display: inline-block;">
 
-                            <MatCard style="margin-bottom:10px" Class="fullsize">
-                                <MatCardContent>
-                                    <MatHeadline6 class="p-1 mb-0">
-                                        <div class="row">
-                                            <div class="col-7 p-0" style="font-size:14px">
-                                                @i.TaskName
+                            <div @ondblclick="@(() => Edit(i))" style="width: -moz-available;display: inline-block;">
 
+                                <MatCard style="margin-bottom:10px" Class="fullsize">
+                                    <MatCardContent>
+                                        <MatHeadline6 class="p-1 mb-0">
+                                            <div class="row">
+                                                <div class="col-7 p-0" style="font-size:14px">
+                                                    @i.TaskName
+
+                                                </div>
+
+                                                <div class="col-5 text-right p-0">
+                                                    <i class="btn glyphicon glyphicon-file " title="@i.FileName" @onclick="@(() => {dialogIsOpenAdd = true; AddModel = i; })"></i>
+                                                    <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
+                                                    <i class="btn glyphicon glyphicon-trash cursor" @onclick="@(() => Remove(i))"></i>
+
+                                                </div>
                                             </div>
+                                        </MatHeadline6>
+                                        <MatBody2 class="p-1 mb-0 pt-0">
+                                            <div class="row">
+                                                <div class="col-7 p-0">
+                                                    <span style="margin-right:15px">@i.PlanDuration </span>
+                                                    @i.RealDuration
 
-                                            <div class="col-5 text-right p-0">
-                                                <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
-                                                <i class="btn glyphicon glyphicon-trash cursor" @onclick="@(() => Remove(i))"></i>
 
+                                                </div>
+                                                @if (i.Description == null || i.Description == "")
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                            <div class="col-5 text-right p-0" title="@i.Description">
+                                                
+                                                    <i class="glyphicon glyphicon-comment"></i>
+                                                
                                             </div>
-                                        </div>
-                                    </MatHeadline6>
-                                    <MatBody2 class="p-1 mb-0 pt-0">
-                                        <div class="mb-1"><span style="margin-right:15px">@i.PlanDuration </span> @i.RealDuration</div>
-                                    </MatBody2>
-                                </MatCardContent>
-                            </MatCard>
+                                                }
+                                            </div>
+                                        </MatBody2>
+                                    </MatCardContent>
+                                </MatCard>
 
-                        </div>
-                    }
+                            </div>
+                        }
                 }
 
 
-                </div >
-            }
+            </div>
         }
-        
-    </div>
-    @if (mEditViewModel.DialogIsOpen != null && mCurrentItem != null)
-    {
-        <EditTask ViewModel="@mEditViewModel" Save="@Save" Reload="@Reload" />
-        <ConfirmationDialog Model=@ConfirmDialogModel Answer="@ConfirmRemove"></ConfirmationDialog>
     }
+
+</div>
+@if (mEditViewModel.DialogIsOpen != null && mCurrentItem != null)
+{
+    <EditTask ViewModel="@mEditViewModel" Save="@Save" Reload="@Reload" />
+    <ConfirmationDialog Model=@ConfirmDialogModel Answer="@ConfirmRemove"></ConfirmationDialog>
+
+}
+@if (dialogIsOpenAdd)
+{
+    <AddFile SaveItem="@UpdateFile" AddModel="@AddModel" dialogIsOpen="@DialogClose"></AddFile>
+
+}
+@code{
+    public void DialogClose()
+    {
+        dialogIsOpenAdd = false;
+    }
+}

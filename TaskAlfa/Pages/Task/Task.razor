@@ -5,74 +5,103 @@
     <div class="row">
         <span class="btn btn-nav" @onclick="@(e=>CreateItem())" style="margin-right:5px">Hinzufügen</span>
 
-        <span class="btn btn-nav" @onclick="@(e=>CreateReport())">PDf</span>
+        <span class="btn btn-nav" @onclick="@(e=>CreateReport())">PDF</span>
     </div>
-    <div class="form-inline float-right align-items-center mb-1">
-        <input style="width:150px" type="text" class="form-control form-control-sm mr-2" placeholder="Bezeichnung.." @bind-value="@TasknameFiltr" @onkeyup="@HandleKeyUp" />
-    </div>
-    <div class="form-inline float-right align-items-center mb-1">
-        <select @bind="BezeichnungFiltr" Class="form-control form-control-sm ">
-            <option value="0">TaskStatus</option>
-            @foreach (var selectValue in Model)
-            {
-                <option value="@selectValue.TaskId">
-                    @selectValue.TaskStatusId
-                </option>
-            }
-        </select>
+    <div class="row">
+        <div class="form-inlinefloat-right align-items-center mb-1">
+            <input style="width:150px" type="text" class="form-control form-control-sm mr-2" placeholder="Bezeichnung.." @bind-value="@TasknameFiltr" @onkeyup="@HandleKeyUp" />
+        </div>
+        <div class="form-inline float-right align-items-center mb-1 ">
+            <select @bind="BezeichnungFiltr" Class="form-control form-control-sm ">
+                <option value="0">TaskStatus</option>
+                @foreach (var selectValue in Model)
+                {
+                    <option value="@selectValue.TaskId">
+                        @selectValue.TaskStatusId
+                    </option>
+                }
+            </select>
 
+        </div>
     </div>
 </div>
 @if (Model != null)
 {
-    <table class="table  table-sm mt-2">
+    <table class="table table-sm mt-2">
         <thead>
             <tr>
                 <th>TaskId</th>
-                <th style="text-align:center"><SortIcon Column="TaskName" Title="TaskName" Sort="@Sort"></SortIcon></th>
-                <th style="text-align:center"><SortIcon Column="PlanDuration" Title="PlanDuration" Sort="@Sort"></SortIcon></th>
-                <th style="text-align:center"><SortIcon Column="RealDuration" Title="RealDuration" Sort="@Sort"></SortIcon></th>
-                <th style="text-align:center"><SortIcon Column="TaskStatus" Title="TaskStatus" Sort="@Sort"></SortIcon></th>
+                <th style="text-align:center"><SortIcon Column="TaskName" Title="Name" Sort="@Sort"></SortIcon></th>
+                <th style="text-align:center" title="PlaneDuration"><SortIcon Column="PlanDuration" Title="PD" Sort="@Sort"></SortIcon></th>
+                <th style="text-align:center" title="RealDurarion"><SortIcon Column="RealDuration" Title="RD" Sort="@Sort"></SortIcon></th>
+                <th style="text-align:center"><SortIcon Column="TaskStatus" Title="Status" Sort="@Sort"></SortIcon></th>
+                <th style="text-align:center">Description</th>
+                <th style="text-align:center">File</th>
                 <th></th>
                 <th></th>
-                <th></th>
+
             </tr>
         </thead>
         <tbody>
             @foreach (var i in Model)
             {
                 <tr>
-                    <td>@i.TaskId</td>
-                    <td style="text-align:center">
+                    <td width="100">@i.TaskId</td>
+                    <td width="100" style="text-align:center">
                         @i.TaskName
                     </td>
 
-                    <td width="500" style="text-align:center">
+                    <td width="100" style="text-align:center">
                         @i.PlanDuration
                     </td>
-                    <td width="500" style="text-align:center">
+                    <td width="100" style="text-align:center">
                         @i.RealDuration
                     </td>
-                    <td style="text-align:center">
+                    <td width="100" style="text-align:center">
                         @StatusModel.FirstOrDefault(x => x.TaskStatusId == i.TaskStatusId).StatusName
                     </td>
-                    <td width="100" align="center">
+
+                    @if (i.Description == null || i.Description == "")
+                    {
+                        <td width="30"></td>
+                    }
+                    else
+                    {
+                        <div class="col-5 text-right p-0" title="@i.Description">
+
+                            <i class="glyphicon glyphicon-comment"></i>
+                        </div>
+
+                    }
+                    @if (i.Dokument == null)
+                    {
+                        <td width="30"></td>
+                    }
+                    else
+                    {
+                        <td width="30" align="center" title="@i.FileName">
+                            <i class=" glyphicon glyphicon-file"></i>
+                        </td>
+
+                    }
+                    <td width="30" align="center">
                         <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
                     </td>
+
                     @if (!i.IsDeleted)
                     {
-                        <td width="63" align="center">
+                        <td width="30" align="center">
                             <i class="btn glyphicon glyphicon-trash cursor align-middle" @onclick="@(() => Trash(i))"></i>
                         </td>
                     }
                     else
                     {
-                        <td width="63">
+                        <td width="30">
                             <i class="btn glyphicon glyphicon-refresh cursor align-middle" @onclick="@(() => Restore(i))"></i>
-                            <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Remove(i))"></i>
+                            <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Removeed(i))"></i>
                         </td>
                     }
-                    @*<td><i class="align-top"><LogComponent Logs="@i.ChangeLog"></LogComponent></i></td>*@
+
                 </tr>
             }
 

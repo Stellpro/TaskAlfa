@@ -18,7 +18,6 @@
 .glyphicon-plus:before {
     content: "\002b";
 }
-
 .glyphicon-euro:before,
 .glyphicon-eur:before {
     content: "\20ac";
