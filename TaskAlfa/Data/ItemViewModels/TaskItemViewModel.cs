@@ -63,16 +63,7 @@ namespace TaskAlfa.Data.ItemViewModels
             get => item.Description;
             set => item.Description = value;
         }
-        public string FileName
-        {
-            get => item.FileName;
-            set => item.FileName = value;
-        }
-        public byte[] Dokument
-        {
-            get => item.Dokument;
-            set => item.Dokument = value;
-        }
+        public string Filename;
         public List<ChangeLog> ChangeLog { get; set; }
         public bool IsRefreshed { get; set; } = false;
         public object Clone()

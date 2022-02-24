@@ -63,9 +63,12 @@
                                                     @i.TaskName
 
                                                 </div>
-
+                                                @foreach (var y in DocumentModel.Where(x => x.TaskId == i.TaskId).ToList())
+                                                {
+                                                    i.Filename = i.Filename + y.FileName + "; ";
+                                                }
                                                 <div class="col-5 text-right p-0">
-                                                    <i class="btn glyphicon glyphicon-file " title="@i.FileName" @onclick="@(() => {dialogIsOpenAdd = true; AddModel = i; })"></i>
+                                                    <i class="btn glyphicon glyphicon-file " title="@i.Filename" @onclick="@(() => {AddModel.TaskId = i.TaskId;dialogIsOpenAdd = true;updateOrCreateDilog.IsOpenUpdateOrCreate = true;})"></i>
                                                     <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
                                                     <i class="btn glyphicon glyphicon-trash cursor" @onclick="@(() => Remove(i))"></i>
 
@@ -86,11 +89,11 @@
                                                 }
                                                 else
                                                 {
-                                            <div class="col-5 text-right p-0" title="@i.Description">
-                                                
-                                                    <i class="glyphicon glyphicon-comment"></i>
-                                                
-                                            </div>
+                                                    <div class="col-5 text-right p-0" title="@i.Description">
+
+                                                        <i class="glyphicon glyphicon-comment"></i>
+
+                                                    </div>
                                                 }
                                             </div>
                                         </MatBody2>
@@ -114,9 +117,9 @@
 
 }
 @if (dialogIsOpenAdd)
-{
-    <AddFile SaveItem="@UpdateFile" AddModel="@AddModel" dialogIsOpen="@DialogClose"></AddFile>
-
+{   
+    <AddFile SaveItem="@CreateOrUpdate" AddModel="@AddModel" dialogIsOpen="@DialogClose"></AddFile>
+    <UpdateOrCreateDilog ModelDilog=@updateOrCreateDilog Answer="@ConfirmCeate"></UpdateOrCreateDilog>
 }
 @code{
     public void DialogClose()

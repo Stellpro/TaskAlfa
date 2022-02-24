@@ -20,10 +20,6 @@ namespace TaskDb.Models
         public double RealDuration { get; set; }
         public bool IsDeleted { get; set; }
         public string Description { get; set; }
-        public string FileName { get; set; }
-        public byte[] Dokument { get; set; }
-        
-        
         
         [Timestamp]
         public byte[] RowVersion { get; set; }

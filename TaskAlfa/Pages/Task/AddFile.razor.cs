@@ -13,18 +13,18 @@ namespace TaskAlfa.Pages.Task
         [Parameter]
         public EventCallback dialogIsOpen { get; set; }
         [Parameter]
-        public TaskItemViewModel AddModel { get; set; }
+        public TaskDocumentItemViewModel AddModel { get; set; }
 
         public bool IsOpen = true;
         [Parameter]
-        public EventCallback<TaskItemViewModel> SaveItem { get; set; }
+        public EventCallback<TaskDocumentItemViewModel> SaveItem { get; set; }
 
 
         public List<IBrowserFile> loadedFiles = new();
         public long maxFileSize = 1920 * 1080;
         public int maxAllowedFiles = 1;
         public bool isLoading;
-        public TaskItemViewModel UpLoadList = new TaskItemViewModel();
+        public TaskDocumentItemViewModel UpLoadList = new TaskDocumentItemViewModel();
 
         public async System.Threading.Tasks.Task LoadFiles(InputFileChangeEventArgs e)
         {

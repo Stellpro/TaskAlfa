@@ -73,17 +73,22 @@
                         </div>
 
                     }
-                    @if (i.Dokument == null)
+                    @foreach (var item in DocumentModel.Where(x=>x.TaskId==i.TaskId).ToList())
                     {
-                        <td width="30"></td>
-                    }
-                    else
-                    {
-                        <td width="30" align="center" title="@i.FileName">
-                            <i class=" glyphicon glyphicon-file"></i>
-                        </td>
-
-                    }
+                        i.Filename = i.Filename + item.FileName + "; ";
+                    }  
+                    @if (i.Filename == null )
+                        {
+                            <td width="30"></td>
+                        }
+                        else
+                        {
+                            <td width="30" align="center" title="@i.Filename">
+                                <i class=" glyphicon glyphicon-file"></i>
+                            </td>
+                            
+                        }
+                    
                     <td width="30" align="center">
                         <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
                     </td>

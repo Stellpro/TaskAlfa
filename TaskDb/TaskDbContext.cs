@@ -11,6 +11,7 @@ namespace TaskDb
         }
         public DbSet<TaskTable> TaskDbSet { get; set; }
         public DbSet<TaskStatus> TaskStatusDbset { get; set; }
+        public DbSet<TaskDocument> TaskDocumentDbset { get; set; }
 
     }
 }

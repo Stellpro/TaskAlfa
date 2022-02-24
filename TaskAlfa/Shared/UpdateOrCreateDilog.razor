@@ -1,0 +1,28 @@
+﻿@using MatBlazor
+<MatDialog @bind-IsOpen="@ModelDilog.IsOpenUpdateOrCreate" CanBeClosed="false">
+    <div class="pl-3 pt-3 pr-3 pb-0">
+        <h3>File</h3>
+        <hr class="mt-3 mb-1" />
+        <div class="btn btn-danger" @onclick="@(() =>ModelDilog.IsOpenUpdateOrCreate = false)">X</div>
+    </div>
+    <MatDialogContent Class="p-3">
+        <div class="d-flex flex-column justify-content-between h-100">
+            <div style="max-width:400px;">
+                @ModelDilog.Text @*Окно с подтверждением удаления *@
+            </div>
+            <div class="btn-group mt-4">
+                <div class="btn btn-nav" @onclick="@(()=> {Answer.InvokeAsync(true);ModelDilog.IsOpenUpdateOrCreate = false; })">create</div>
+                <div class="btn btn-nav" @onclick="@(() =>{Answer.InvokeAsync(false);ModelDilog.IsOpenUpdateOrCreate = false;})">overwrit</div>
+
+            </div>
+        </div>
+    </MatDialogContent>
+</MatDialog>
+@code
+{
+    [Parameter]
+    public UpdateOrCreateDilogModel ModelDilog { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> Answer { get; set; }
+ }

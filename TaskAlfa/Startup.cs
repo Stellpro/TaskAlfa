@@ -33,6 +33,7 @@ namespace TaskAlfa
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<TaskService>();
+            services.AddScoped<TaskDocumentService>();
             services.AddScoped<SystemPageService>();
             services.AddScoped<TaskStatusService>();
             services.AddMatBlazor();
