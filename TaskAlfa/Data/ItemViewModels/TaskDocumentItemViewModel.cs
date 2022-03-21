@@ -42,6 +42,7 @@ namespace TaskAlfa.Data.ItemViewModels
             get => item.Dokument;
             set => item.Dokument = value;
         }
+        public bool Answer { get; set; }
         public object Clone()
         {
             var temp = item.Clone() as TaskDocument;

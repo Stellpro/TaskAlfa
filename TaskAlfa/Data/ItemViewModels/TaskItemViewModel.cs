@@ -41,7 +41,7 @@ namespace TaskAlfa.Data.ItemViewModels
             set => item.TaskName = value;
         }
         [Required]
-
+        [Range(0.01, 10000)]
         public double PlanDuration
         {
             get => item.PlanDuration;
@@ -64,6 +64,7 @@ namespace TaskAlfa.Data.ItemViewModels
             set => item.Description = value;
         }
         public string Filename;
+        
         public List<ChangeLog> ChangeLog { get; set; }
         public bool IsRefreshed { get; set; } = false;
         public object Clone()

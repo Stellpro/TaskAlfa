@@ -50,7 +50,10 @@ namespace TaskAlfa
 
             services.AddDbContext<ControllingDbContext>(options =>
               options.UseSqlServer(Configuration.GetConnectionString("AlfaContext")));
-
+            services.AddSignalR(e =>
+            {
+                e.MaximumReceiveMessageSize = 102400000;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

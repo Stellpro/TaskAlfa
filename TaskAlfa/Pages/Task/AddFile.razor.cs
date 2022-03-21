@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using TaskAlfa.Data.ItemViewModels;
@@ -32,8 +35,7 @@ namespace TaskAlfa.Pages.Task
             loadedFiles.Clear();
 
 
-
-
+           
 
             try
             {
@@ -61,10 +63,29 @@ namespace TaskAlfa.Pages.Task
 
 
             isLoading = false;
+
+            //SqlConnection sqlConnection = new SqlConnection(@"Data Source=COMP\SQLEXPRESS;Initial Catalog=db;Integrated Security=True;Pooling=False");
+            //SqlCommand sqlCommand = new SqlCommand("SELECT image FROM tab WHERE id = 1", sqlConnection);
+            //sqlConnection.Open();
+            //SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+            //if (sqlDataReader.HasRows)
+            //{
+            //    MemoryStream memoryStream = new MemoryStream();
+            //    foreach (DbDataRecord record in sqlDataReader)
+            //        memoryStream.Write((byte[])record["image"], 0, ((byte[])record["image"]).Length);
+            //    Image image = Image.FromStream(memoryStream);
+            //    image.Save(@"C:\1.BMP");
+            //    memoryStream.Dispose();
+            //    image.Dispose();
+            //}
+            //else
+            //    Console.WriteLine("Пустая выборка");
+            //sqlConnection.Close();
         }
         public void Close()
         {           
             dialogIsOpen.InvokeAsync();
         }
+
     }
 }

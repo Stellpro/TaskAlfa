@@ -13,6 +13,7 @@ using TaskAlfa.Reporting;
 using TaskAlfa.Reporting.Models;
 using TaskAlfa.Shared;
 
+
 namespace TaskAlfa.Pages.Task
 {
     public class ItemViewModel : BaseViewModel
@@ -288,7 +289,11 @@ namespace TaskAlfa.Pages.Task
         {
             ConfirmDialogModel.IsOpenConfirmation = true;
         }
-
+        public TaskItemViewModel TestSave(TaskItemViewModel item)
+        {
+            var newitem = item;
+            return newitem;
+        }
         protected void Save(TaskItemViewModel item)
         {
             try
@@ -335,7 +340,6 @@ namespace TaskAlfa.Pages.Task
             foreach (var i in item)
             {
                 BoardItem.Add(i.TaskStatusId, Model.Where(x => x.TaskStatusId == i.TaskStatusId).ToList());
-
             }
         }
         public void ConfirmCeate(bool answer)
@@ -345,75 +349,63 @@ namespace TaskAlfa.Pages.Task
         }
         public void CreateOrUpdate(TaskDocumentItemViewModel item)
         {
-
-            if (Answer)
+           
+            if (item.Answer)
             {
-                var newItem = DocumentService.Create(item);
-                if (newItem != null)
-                {
-                    DocumentModel.Add(newItem);
-
-
-                }
-
-
+                Answer = item.Answer;
+                item.Answer = false;
             }
-            else
-            {
-
-                try
+                if (Answer)
                 {
-                    var index = DocumentModel.FindIndex(x => x.TaskId == item.TaskId);
-                    item.TaskDocumentId = DocumentModel[index].TaskDocumentId;
-                    DocumentModel[index] = item;
-                    DocumentService.Update(item);
-                    dialogIsOpenAdd = false;
+                    var newItem = DocumentService.Create(item);
+                    if (newItem != null)
+                    {
+                        DocumentModel.Add(newItem);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        var index = DocumentModel.FindIndex(x => x.TaskId == item.TaskId);
+                        item.TaskDocumentId = DocumentModel[index].TaskDocumentId;
+                        DocumentModel[index] = item;
+                        DocumentService.Update(item);
+                        dialogIsOpenAdd = false;
+                    }
+                    catch (DbUpdateConcurrencyException e)
+                    {
+                        ExceprionProcessing(e, FunctionModelEnum.Update, mCurrentItem, mEditViewModel, "Update");
+                        mEditViewModel.IsConcurrencyError = true;
+                    }
 
                 }
-
-
-                catch (DbUpdateConcurrencyException e)
-                {
-                    ExceprionProcessing(e, FunctionModelEnum.Update, mCurrentItem, mEditViewModel, "Update");
-
-                    mEditViewModel.IsConcurrencyError = true;
-
-
-                }
-
-            }
+            
         }
         public TaskItemViewModel Update(TaskItemViewModel item)
         {
-            if (item.TaskId == 0)
-            {
 
-                return item;
+
+            try
+            {
+                var index = Model.FindIndex(x => x.TaskId == item.TaskId);
+                Model[index] = item;
+                return Service.Update(item);
+
 
             }
-            else
+
+
+            catch (DbUpdateConcurrencyException e)
             {
+                ExceprionProcessing(e, FunctionModelEnum.Update, mCurrentItem, mEditViewModel, "Update");
 
-                try
-                {
-                    var index = Model.FindIndex(x => x.TaskId == item.TaskId);
-                    Model[index] = item;
-                    return Service.Update(item);
-
-
-                }
-
-
-                catch (DbUpdateConcurrencyException e)
-                {
-                    ExceprionProcessing(e, FunctionModelEnum.Update, mCurrentItem, mEditViewModel, "Update");
-
-                    mEditViewModel.IsConcurrencyError = true;
-                    return mCurrentItem = Service.Reload(item.Item);
-
-                }
+                mEditViewModel.IsConcurrencyError = true;
+                return mCurrentItem = Service.Reload(item.Item);
 
             }
+
+
         }
         public void Reload()
         {

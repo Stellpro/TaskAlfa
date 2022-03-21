@@ -57,6 +57,7 @@ namespace TaskAlfa.Data.ItemViewModels
             get => item.Count;
             set => item.Count = value;
         }
+        
         public object Clone()
         {
             var temp = item.Clone() as TaskStatus;

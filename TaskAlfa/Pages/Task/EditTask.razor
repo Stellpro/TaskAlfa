@@ -1,4 +1,7 @@
 ﻿@using TaskAlfa.Data.ItemViewModels;
+@using System.IO;
+@using System.Text;
+@inherits ItemViewModel
 <div>
     <MatDialog @bind-IsOpen="@ViewModel.DialogIsOpen" CanBeClosed="false">
         <EditForm Model="ViewModel.Model" OnValidSubmit="@(e => { Save.InvokeAsync(ViewModel.Model); })" style="width:670px">
@@ -19,10 +22,6 @@
             </MatDialogTitle>
             <MatDialogContent>
                 <DataAnnotationsValidator />
-
-
-                @*<EditUpdateErrorText IsShow="@ViewModel.IsConcurrencyError" Text="@Globals.ExceptionText[ExeptionTypeEnum.Concurrency]" />
-        <EditUpdateErrorText IsShow="@(!string.IsNullOrEmpty(ViewModel.ErrorString))" Text="@ViewModel.ErrorString" />*@
 
                 <div class="form-group row mb-1">
                     <label for="TaskName" class="col-3 pl-0">TaskName</label>
@@ -76,20 +75,67 @@
                         <ValidationMessage For="@(() => ViewModel.Model.Description)" />
                     </div>
                 </div>
+                <div class="form-group row mb-1">
+                    <label for="Screen" class="col-3 pl-0">AddScreen</label>
+                    <div class="col-9 btn-group mb-1" style="padding-left: 0px;padding-right: 0px;">
+                        <InputFile Class="form-control form-control-sm " id="Screen"></InputFile>
 
-</MatDialogContent>
+                    </div>
+                </div>
+
+            </MatDialogContent>
         </EditForm>
+        @if (temp != null)
+        {
+            <img src="data:image/bmp;base64, @(Convert.ToBase64String(temp))" />
+
+        }
     </MatDialog>
 </div>
+
 @code {
     [Parameter]
     public EditTaskItemViewModel ViewModel { get; set; }
+
+    public TaskDocumentItemViewModel Screen = new TaskDocumentItemViewModel();
+    public ItemViewModel SaveFile = new ItemViewModel();
 
     [Parameter]
     public EventCallback<TaskItemViewModel> Save { get; set; }
 
     [Parameter]
     public EventCallback<TaskItemViewModel> Reload { get; set; }
+    private DotNetObjectReference<EditTask> objRef;
+
+    [Inject] public IJSRuntime js { get; set; }
+    protected override void OnParametersSet()
+    {
+        objRef = DotNetObjectReference.Create(this);
+        js.InvokeVoidAsync("start", objRef);
+
+    }
+    byte[] temp = null;
+
+    [JSInvokable("SingleUpload")]
+
+    public async void SingleUpload(string e)
+    {
+        var t = e.Split(',');
+        var Decoding = Convert.FromBase64String(t[1]);
+        temp = Decoding;
+        var name = t[0].Split('/');
+        Screen.TaskDocumentId = 0;
+        Screen.FileName = name[1];
+        Screen.Answer = true;
+        Screen.Dokument = Decoding;
+        Screen.TaskId = ViewModel.Model.TaskId;
+
+        CreateOrUpdate(Screen);
+
+
+        StateHasChanged();
+    }
+
 
 }
 

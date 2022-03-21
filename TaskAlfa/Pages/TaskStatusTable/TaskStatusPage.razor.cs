@@ -19,8 +19,11 @@ namespace TaskAlfa.Pages.TaskStatusTable
         [Inject] private TaskService TaskService { get; set; }
         public List<TaskStatusItemViewModel> StatusModel { get; set; } = new List<TaskStatusItemViewModel>();
         public List<TaskItemViewModel> DeletedModel { get; set; } = new List<TaskItemViewModel>();
+
         protected EditTaskStatusItemViewModel mEditViewModel = new EditTaskStatusItemViewModel();
+
         public TaskStatusItemViewModel mCurrentItem;
+
         public ConfirmationDialogModel ConfirmDialogModel = new ConfirmationDialogModel();
         protected override void OnAfterRender(bool firstRender)
         {
@@ -73,15 +76,7 @@ namespace TaskAlfa.Pages.TaskStatusTable
                 ConfirmDialogModel.IsOpenConfirmation = true;
                 mCurrentItem = item;
                 await System.Threading.Tasks.Task.CompletedTask;
-                //Service.Remove(item);
-                //Model.Remove(item);
-                //BoardItem.Clear();
-                //foreach (var y in StatusModel)
-                //{
-                //    BoardItem.Add(y.TaskStatusId, Model.Where(x => x.TaskStatusId == y.TaskStatusId).ToList());
-                //    StateHasChanged();
-                //}
-                //StateHasChanged();
+
                 
             }
             catch (Exception e)
@@ -117,7 +112,7 @@ namespace TaskAlfa.Pages.TaskStatusTable
             }
             catch (Exception e)
             {
-                //    mCurrentItem = item;
+              
                 ExceprionProcessing(e, FunctionModelEnum.Restore, item, null);
             }
         }
@@ -158,12 +153,7 @@ namespace TaskAlfa.Pages.TaskStatusTable
                     if (newItem != null)
                     {
                         StatusModel.Add(newItem);
-                        //BoardItem.Clear();
-                        //foreach (var i in StatusModel)
-                        //{
-                        //    BoardItem.Add(i.TaskStatusId, Model.Where(x => x.TaskStatusId == i.TaskStatusId).ToList());
-                        //    StateHasChanged();
-                        //}
+                        
                         StateHasChanged();
 
                     }
@@ -224,22 +214,7 @@ namespace TaskAlfa.Pages.TaskStatusTable
             mEditViewModel.IsConcurrencyError = false;
             mEditViewModel.DialogIsOpen = false;
         }
-        //protected void Trash(TaskStatusItemViewModel item)
-        //{
-        //    try
-        //    {
-        //        //item.IsDeleted = true;
-        //        var newItem = StatusService.UpdateIsDelete(item);
-        //        var index = StatusModel.FindIndex(x => x.TaskStatusId == item.TaskStatusId);
-        //        StatusModel[index] = newItem;
-        //        StateHasChanged();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        mCurrentItem = item;
-        //        ExceprionProcessing(e, FunctionModelEnum.Trash, item, null);
-        //    }
-        //}
+       
         protected void Sort(KeyValuePair<string, string> pair)
         {
             StatusModel = pair.Value == "desc" ? StatusModel.OrderByDescending(x => x.GetType().GetProperty(pair.Key).GetValue(x, null)).ToList()
