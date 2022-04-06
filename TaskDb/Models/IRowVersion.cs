@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace TaskDb.Models
 {
-    
     public interface IRowVersion
     {
         public byte[] RowVersion { get; set; }

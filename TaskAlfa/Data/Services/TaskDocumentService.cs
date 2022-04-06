@@ -29,6 +29,7 @@ namespace TaskAlfa.Data.Services
             
             x.FileName = item.FileName;
             x.Dokument = item.Dokument;
+            x.Comment = item.Comment;
             return Convert(TaskRepo.Update(x, item.Item.RowVersion));
         }
         public TaskDocumentItemViewModel Create(TaskDocumentItemViewModel item)
@@ -41,8 +42,6 @@ namespace TaskAlfa.Data.Services
 
 
         }
-
-
         public List<TaskDocumentItemViewModel> GetList()
         {
             List<TaskDocumentItemViewModel> list = TaskRepo.GetQuery().ToList().Select(x => Convert(x)).ToList();

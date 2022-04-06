@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TaskAlfa.Data;
 using TaskAlfa.Data.ItemViewModels;
@@ -27,8 +28,6 @@ namespace TaskAlfa.Pages.Task
         public TaskDocumentItemViewModel AddModel { get; set; } = new TaskDocumentItemViewModel();
         public List<TaskStatusItemViewModel> StatusModel { get; set; } = new List<TaskStatusItemViewModel>();
 
-        public int CountStatus;
-
         protected EditTaskItemViewModel mEditViewModel = new EditTaskItemViewModel();
 
         public TaskItemViewModel mCurrentItem;
@@ -40,7 +39,6 @@ namespace TaskAlfa.Pages.Task
         protected bool dialogIsOpen = false;
 
         public Dictionary<int, List<TaskItemViewModel>> BoardItem = new Dictionary<int, List<TaskItemViewModel>>();
-        public int Id { get; set; }
 
         public ConfirmationDialogModel ConfirmDialogModel = new ConfirmationDialogModel()
 
@@ -49,6 +47,7 @@ namespace TaskAlfa.Pages.Task
             Text = "Are you sure?",
             Title = "Warning!"
         };
+
         public UpdateOrCreateDilogModel updateOrCreateDilog = new UpdateOrCreateDilogModel()
         {
             IsOpenUpdateOrCreate = false
@@ -65,7 +64,6 @@ namespace TaskAlfa.Pages.Task
             get { return bezeichnungFiltr; }
             set { bezeichnungFiltr = value; StartSearch(); }
         }
-
         protected override void OnAfterRender(bool firstRender)
         {
             if (firstRender)
@@ -155,7 +153,6 @@ namespace TaskAlfa.Pages.Task
             return;
 
         }
-
         public async void HandleKeyUp(KeyboardEventArgs e)
         {
             if (e.Key == "Enter")
@@ -171,6 +168,8 @@ namespace TaskAlfa.Pages.Task
             mEditViewModel.StatusModel = StatusModel;
             mEditViewModel.TaskStatusIdModel = StatusModel[index];
             mCurrentItem.TaskStatusId = StatusModel[index].TaskStatusId;
+            mEditViewModel.DocumentModel = DocumentModel;
+            mEditViewModel.DocumentService = DocumentService;
             mEditViewModel.DialogIsOpen = true;
             mEditViewModel.Model = mCurrentItem;
             StateHasChanged();
@@ -191,14 +190,13 @@ namespace TaskAlfa.Pages.Task
         public void CreateReport()
         {
             TaskAlfaReportModel model = new TaskAlfaReportModel();
-            model.Block = GetTaskList();
+            model.Block = GetTaskReportList();
 
             byte[] file = new XtraReportEngine().CreateAnschreibenEmpfehlungReport(model, 2);
 
             System.IO.File.WriteAllBytes(@"C:\Users\stellpro\Desktop\TaskAlfa.pdf", file);
         }
-
-        private List<TaskAlfaItemReportModel> GetTaskList()
+        private List<TaskAlfaItemReportModel> GetTaskReportList()
         {
             var returnList = new List<TaskAlfaItemReportModel>();
             foreach (var item in Model)
@@ -213,19 +211,17 @@ namespace TaskAlfa.Pages.Task
             }
             return returnList;
         }
-
-
         public void Edit(TaskItemViewModel param1)
         {
             mCurrentItem = param1.Clone() as TaskItemViewModel;
             mEditViewModel.StatusModel = StatusModel;
             mEditViewModel.Model = mCurrentItem;
+            mEditViewModel.DocumentModel = DocumentModel;
+            mEditViewModel.DocumentService = DocumentService;
             mEditViewModel.DialogIsOpen = true;
 
         }
-
-
-        protected void Removeed(TaskItemViewModel item)
+        protected void RemoveTask(TaskItemViewModel item)
         {
             try
             {
@@ -246,17 +242,15 @@ namespace TaskAlfa.Pages.Task
         protected async System.Threading.Tasks.Task Remove(TaskItemViewModel item)
         {
             try
-            {
+            { 
                 ConfirmDialogModel.IsOpenConfirmation = true;
                 Isdelete = item;
-
                 await System.Threading.Tasks.Task.CompletedTask;
             }
             catch (Exception e)
             {
             }
         }
-
         protected async System.Threading.Tasks.Task ConfirmRemove(bool answer)
         {
             if (answer)
@@ -284,15 +278,9 @@ namespace TaskAlfa.Pages.Task
                 ExceprionProcessing(e, FunctionModelEnum.Restore, item, null);
             }
         }
-
         protected void Deleted()
         {
             ConfirmDialogModel.IsOpenConfirmation = true;
-        }
-        public TaskItemViewModel TestSave(TaskItemViewModel item)
-        {
-            var newitem = item;
-            return newitem;
         }
         protected void Save(TaskItemViewModel item)
         {
@@ -301,7 +289,7 @@ namespace TaskAlfa.Pages.Task
 
                 if (item.TaskId > 0)
                 {
-                    var newItem = Update(item);
+                    var newItem = UpdateTask(item);
                     var index = Model.FindIndex(x => x.TaskId == this.mCurrentItem.TaskId);
                     Model[index] = newItem;
                     UpdateBoard(StatusModel);
@@ -333,6 +321,7 @@ namespace TaskAlfa.Pages.Task
                 mCurrentItem = item;
                 ExceprionProcessing(e, FunctionModelEnum.Save, mCurrentItem, mEditViewModel);
             }
+            StateHasChanged();
         }
         private void UpdateBoard(List<TaskStatusItemViewModel> item)
         {
@@ -342,67 +331,19 @@ namespace TaskAlfa.Pages.Task
                 BoardItem.Add(i.TaskStatusId, Model.Where(x => x.TaskStatusId == i.TaskStatusId).ToList());
             }
         }
-        public void ConfirmCeate(bool answer)
+        public TaskItemViewModel UpdateTask(TaskItemViewModel item)
         {
-            Answer = answer;
-
-        }
-        public void CreateOrUpdate(TaskDocumentItemViewModel item)
-        {
-           
-            if (item.Answer)
-            {
-                Answer = item.Answer;
-                item.Answer = false;
-            }
-                if (Answer)
-                {
-                    var newItem = DocumentService.Create(item);
-                    if (newItem != null)
-                    {
-                        DocumentModel.Add(newItem);
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        var index = DocumentModel.FindIndex(x => x.TaskId == item.TaskId);
-                        item.TaskDocumentId = DocumentModel[index].TaskDocumentId;
-                        DocumentModel[index] = item;
-                        DocumentService.Update(item);
-                        dialogIsOpenAdd = false;
-                    }
-                    catch (DbUpdateConcurrencyException e)
-                    {
-                        ExceprionProcessing(e, FunctionModelEnum.Update, mCurrentItem, mEditViewModel, "Update");
-                        mEditViewModel.IsConcurrencyError = true;
-                    }
-
-                }
-            
-        }
-        public TaskItemViewModel Update(TaskItemViewModel item)
-        {
-
-
             try
             {
                 var index = Model.FindIndex(x => x.TaskId == item.TaskId);
                 Model[index] = item;
                 return Service.Update(item);
-
-
             }
-
-
             catch (DbUpdateConcurrencyException e)
             {
                 ExceprionProcessing(e, FunctionModelEnum.Update, mCurrentItem, mEditViewModel, "Update");
-
                 mEditViewModel.IsConcurrencyError = true;
                 return mCurrentItem = Service.Reload(item.Item);
-
             }
 
 
@@ -428,16 +369,11 @@ namespace TaskAlfa.Pages.Task
                 ExceprionProcessing(e, FunctionModelEnum.Trash, item, null);
             }
         }
-
-
         protected void Sort(KeyValuePair<string, string> pair)
         {
             Model = pair.Value == "desc" ? Model.OrderByDescending(x => x.GetType().GetProperty(pair.Key).GetValue(x, null)).ToList()
                 : Model.OrderBy(x => x.GetType().GetProperty(pair.Key).GetValue(x, null)).ToList();
             StateHasChanged();
         }
-
-
-
     }
 }

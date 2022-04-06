@@ -6,12 +6,9 @@
 <div class="row">
     @foreach (var item in StatusModel.OrderBy(x => x.OrderId).ToList())
     {
-
-
         @if (item.IsVisible)
         {
             var count = 0;
-
             <div class="col" style="width:200px">
                 <SortIcon Column="@item.StatusName" Title="@item.StatusName" Sort="@Sort"></SortIcon>
                 <i class="btn glyphicon glyphicon-plus" @onclick="@(() => CreateItem(item.TaskStatusId))"></i>
@@ -35,7 +32,6 @@
                     <option @onclick="@(e => Visible(item))">InVisible</option>
                 </select>
             </div>
-
         }
     }
 </div>
@@ -44,9 +40,7 @@
     {
         @if (y.IsVisible)
         {
-
             <div class="col" style="width:auto">
-
                 @foreach (var item in BoardItem)
                 {
                     @if (item.Key == y.TaskStatusId)
@@ -80,8 +74,6 @@
                                                 <div class="col-7 p-0">
                                                     <span style="margin-right:15px">@i.PlanDuration </span>
                                                     @i.RealDuration
-
-
                                                 </div>
                                                 @if (i.Description == null || i.Description == "")
                                                 {
@@ -113,15 +105,16 @@
 @if (mEditViewModel.DialogIsOpen != null && mCurrentItem != null)
 {
     <EditTask ViewModel="@mEditViewModel" Save="@Save" Reload="@Reload" />
-    <ConfirmationDialog Model=@ConfirmDialogModel Answer="@ConfirmRemove"></ConfirmationDialog>
+    <ConfirmationDialog Model=@ConfirmDialogModel Answer="@ConfirmRemove"/>
 
 }
 @if (dialogIsOpenAdd)
 {   
-    <AddFile SaveItem="@CreateOrUpdate" AddModel="@AddModel" dialogIsOpen="@DialogClose"></AddFile>
-    <UpdateOrCreateDilog ModelDilog=@updateOrCreateDilog Answer="@ConfirmCeate"></UpdateOrCreateDilog>
+    <AddFile SaveItem="@mEditViewModel.CreateOrUpdate" AddModel="@AddModel" dialogIsOpen="@DialogClose"></AddFile>
+    <UpdateOrCreateDilog ModelDilog=@updateOrCreateDilog Answer="@mEditViewModel.ConfirmCeate"></UpdateOrCreateDilog>
 }
 @code{
+    
     public void DialogClose()
     {
         dialogIsOpenAdd = false;

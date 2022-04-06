@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using TaskDb.Models;
@@ -36,6 +37,12 @@ namespace TaskAlfa.Data.ItemViewModels
         {
             get => item.FileName;
             set => item.FileName = value;
+        }
+        [Required]
+        public string Comment
+        {
+            get => item.Comment;
+            set => item.Comment = value;
         }
         public byte[] Dokument
         {

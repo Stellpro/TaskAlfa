@@ -103,7 +103,7 @@
                     {
                         <td width="30">
                             <i class="btn glyphicon glyphicon-refresh cursor align-middle" @onclick="@(() => Restore(i))"></i>
-                            <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => Removeed(i))"></i>
+                            <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => RemoveTask(i))"></i>
                         </td>
                     }
 
@@ -117,10 +117,7 @@
 
 @if (mEditViewModel.DialogIsOpen != null && mCurrentItem != null)
 {
-    <EditTask ViewModel="@mEditViewModel" Save="@Save" Reload="@Reload" />
+    <EditTask ViewModel="@mEditViewModel"  Save="@Save" Reload="@Reload" />
 }
 
-@code {
 
-
-}

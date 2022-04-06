@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskAlfa.Reporting", "TaskA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskAlfa.Reporting.Runner", "TaskAlfa.Reporting.Runner\TaskAlfa.Reporting.Runner.csproj", "{66349442-581E-423D-A554-7F1526941286}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlfaTaskTests", "AlfaTaskTests\AlfaTaskTests.csproj", "{07BD7EDB-355D-4CDE-8BC5-9E0A92EBC0CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlfaTaskTests", "AlfaTaskTests\AlfaTaskTests.csproj", "{07BD7EDB-355D-4CDE-8BC5-9E0A92EBC0CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

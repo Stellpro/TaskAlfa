@@ -21,8 +21,6 @@ namespace TaskAlfa.Pages.Task
         public bool IsOpen = true;
         [Parameter]
         public EventCallback<TaskDocumentItemViewModel> SaveItem { get; set; }
-
-
         public List<IBrowserFile> loadedFiles = new();
         public long maxFileSize = 1920 * 1080;
         public int maxAllowedFiles = 1;
@@ -33,24 +31,13 @@ namespace TaskAlfa.Pages.Task
         {
             isLoading = true;
             loadedFiles.Clear();
-
-
-           
-
             try
             {
                 var file = e.GetMultipleFiles(maxAllowedFiles).FirstOrDefault();
                 loadedFiles.Add(file);
-
-
-
-
                 await using MemoryStream fs = new();
                 await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
                 var Mem = fs.ToArray();
-                
-                
-
                 AddModel.Dokument = Mem;
                 AddModel.FileName = file.Name;
                 UpLoadList = AddModel;
@@ -58,29 +45,8 @@ namespace TaskAlfa.Pages.Task
             catch (Exception ex)
             {
                 var temp = ex.Message;
-
             }
-
-
-            isLoading = false;
-
-            //SqlConnection sqlConnection = new SqlConnection(@"Data Source=COMP\SQLEXPRESS;Initial Catalog=db;Integrated Security=True;Pooling=False");
-            //SqlCommand sqlCommand = new SqlCommand("SELECT image FROM tab WHERE id = 1", sqlConnection);
-            //sqlConnection.Open();
-            //SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-            //if (sqlDataReader.HasRows)
-            //{
-            //    MemoryStream memoryStream = new MemoryStream();
-            //    foreach (DbDataRecord record in sqlDataReader)
-            //        memoryStream.Write((byte[])record["image"], 0, ((byte[])record["image"]).Length);
-            //    Image image = Image.FromStream(memoryStream);
-            //    image.Save(@"C:\1.BMP");
-            //    memoryStream.Dispose();
-            //    image.Dispose();
-            //}
-            //else
-            //    Console.WriteLine("Пустая выборка");
-            //sqlConnection.Close();
+            isLoading = false;          
         }
         public void Close()
         {           

@@ -17,12 +17,10 @@ namespace TaskDb
             _context = context;
             _dbSet = context.Set<TEntity>();
         }
-
         public IEnumerable<TEntity> Get()
         {
             return _dbSet.ToList();
         }
-
         public IQueryable<TEntity> GetQuery()
         {
             return _dbSet.AsNoTracking().AsQueryable();
@@ -31,28 +29,21 @@ namespace TaskDb
         {
             return _dbSet.AsNoTracking().Take(count).ToList();
         }
-
         public IEnumerable<TEntity> Take(int count, Func<TEntity, bool> predicate)
         {
             return _dbSet.AsNoTracking().Where(predicate).Take(count).ToList();
         }
-
         public IEnumerable<TEntity> Get(Func<TEntity, bool> predicate)
         {
-
             return _dbSet.AsNoTracking().Where(predicate);
         }
-
         public TEntity FindById(int id)
         {
             var entity = _dbSet.Find(id);
-
             _context.Entry(entity).State = EntityState.Detached;
             _context.SaveChanges();
-
             return entity;
         }
-
         public TEntity FindByIdForReload(int id)
         {
             var item = _dbSet.Find(id);
@@ -63,15 +54,12 @@ namespace TaskDb
 
             return item;
         }
-
-        public TEntity Create(TEntity item)
+       public TEntity Create(TEntity item)
         {
             var itemNew = _dbSet.Add(item).Entity;
             _context.SaveChanges();
-
             _context.Entry(item).State = EntityState.Detached;
             _context.SaveChanges();
-
             return itemNew;
         }
 
@@ -95,14 +83,12 @@ namespace TaskDb
         }
         public TEntity Update(TEntity item, byte[] rowversion, string operation = "")
         {
-
             if (item is IRowVersion)
                 {
                     _context.Entry(item).OriginalValues["RowVersion"] = rowversion;
                 }
                 _context.Entry(item).State = EntityState.Modified;
             _context.SaveChanges();
-
             _context.Entry(item).State = EntityState.Detached;
             _context.SaveChanges();
 
@@ -115,15 +101,12 @@ namespace TaskDb
             _dbSet.Remove(item);
             _context.SaveChanges();
         }
-
         public TEntity Update(TEntity item)
         {
             _context.Entry(item).State = EntityState.Modified;
             _context.SaveChanges();
-
             _context.Entry(item).State = EntityState.Detached;
             _context.SaveChanges();
-
             return item;
         }
     }

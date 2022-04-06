@@ -1,20 +1,29 @@
 ﻿@using TaskAlfa.Data.ItemViewModels;
 @using System.IO;
 @using System.Text;
-@inherits ItemViewModel
+
+
 <div>
     <MatDialog @bind-IsOpen="@ViewModel.DialogIsOpen" CanBeClosed="false">
-        <EditForm Model="ViewModel.Model" OnValidSubmit="@(e => { Save.InvokeAsync(ViewModel.Model); })" style="width:670px">
+        <EditForm Model="ViewModel.Model" OnValidSubmit="@(e => { Save.InvokeAsync(ViewModel.Model);UpdateScreen(temp); ViewModel.CreateOrUpdate(ViewModel.DocumentModel); })" style="width:1080px">
             <MatDialogTitle class="diHeader">
                 <h3>Task</h3>
                 <div class="btn-group">
+
                     @if (ViewModel.IsConcurrencyError)
                     {<MatDialog @bind-IsOpen="@ViewModel.IsConcurrencyError" CanBeClosed="false">
                             <span class="btn btn-nav btn-primary mr-1" @onclick="@(e => Reload.InvokeAsync(ViewModel.Model))">Please Reload. This entry has been changed</span>
                         </MatDialog> }
                     else
                     {
-                        <input type="submit" value="Speichern" class="btn btn-nav btn-primary mr-1" style="float: right;" />
+                        @if (ViewModel.DocumentModel.Any(x => x.TaskDocumentId == 0))
+                        {
+                            <input type="submit" value="Speichern" class="btn btn-nav btn-danger mr-1" style="float: right;" />
+                        }
+                        else
+                        {
+                            <input type="submit" value="Speichern" class="btn btn-nav btn-primary mr-1" style="float: right;" />
+                        }
                     }
                     <span class="btn btn-nav" @onclick="@(e => { ViewModel.DialogIsOpen = false; })">X</span>
                 </div>
@@ -22,82 +31,146 @@
             </MatDialogTitle>
             <MatDialogContent>
                 <DataAnnotationsValidator />
+                <div class="row">
+                    <div class="col-8">
+                        <div class="form-group row mb-1">
+                            <label for="TaskName" class="col-3 pl-0">TaskName</label>
+                            <InputText @bind-Value="@ViewModel.Model.TaskName" Class="form-control form-control-sm col-5" id="Bezeichnung"></InputText>
+                            <ValidationMessage For="@(() => ViewModel.Model.TaskName)" />
+                        </div>
 
-                <div class="form-group row mb-1">
-                    <label for="TaskName" class="col-3 pl-0">TaskName</label>
-                    <InputText @bind-Value="@ViewModel.Model.TaskName" Class="form-control form-control-sm col-5" id="Bezeichnung"></InputText>
-                    <ValidationMessage For="@(() => ViewModel.Model.TaskName)" />
-                </div>
+                        <div class="form-group row mb-1">
+                            <label class="col-3 pl-0">Statuse</label>
+                            <div class="col-9 btn-group mb-1" style="padding-left: 0px;padding-right: 0px;">
+                                @if (ViewModel.TaskStatusIdModel == null)
+                                {
+                                    <InputSelect @bind-Value="ViewModel.Model.TaskStatusId" Class="form-control form-control-sm ">
+                                        <option value="@((int?)null)">---</option>
+                                        @foreach (var selectValue in ViewModel.StatusModel)
+                                            {
+                                            <option value="@selectValue.TaskStatusId">
+                                                @selectValue.StatusName
+                                            </option>
+                                            }
+                                    </InputSelect>
+                                }
+                                else
+                                {
+                                    <InputSelect @bind-Value="ViewModel.Model.TaskStatusId" Class="form-control form-control-sm ">
+                                        @foreach (var selectValue in ViewModel.StatusModel)
+                                            {
+                                            <option value="@selectValue.TaskStatusId">
+                                                @selectValue.StatusName
+                                            </option>
+                                            }
+                                    </InputSelect>
+                                }
+                            </div>
+                        </div>
 
-                <div class="form-group row mb-1">
-                    <label class="col-3 pl-0">Statuse</label>
-                    <div class="col-9 btn-group mb-1" style="padding-left: 0px;padding-right: 0px;">
-                        @if (ViewModel.TaskStatusIdModel == null)
+                        <div class="form-group row mb-1">
+                            <label for="PlanDuration" class="col-3 pl-0">PlanDuration</label>
+                            <InputNumber @bind-Value="@ViewModel.Model.PlanDuration" Class="form-control form-control-sm col-5" step="0.01" min="0.01"></InputNumber>
+                            <ValidationMessage For="@(() => ViewModel.Model.PlanDuration)" />
+                        </div>
+                        <div class="form-group row mb-1">
+                            <label for="RealDuration" class="col-3 pl-0">RealDuration</label>
+                            <InputNumber @bind-Value="@ViewModel.Model.RealDuration" Class="form-control form-control-sm col-5" step="0.01" min="0.01"></InputNumber>
+                            <ValidationMessage For="@(() => ViewModel.Model.RealDuration)" />
+                        </div>
+                        <div class="form-group row mb-1">
+                            <label for="Description" class="col-3 pl-0">Description</label>
+                            <div class="col-9 btn-group mb-1" style="padding-left: 0px;padding-right: 0px;">
+                                <InputTextArea @bind-Value="@ViewModel.Model.Description" Class="form-control form-control-sm " id="Description" maxlength="500"></InputTextArea>
+                                <ValidationMessage For="@(() => ViewModel.Model.Description)" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="Screen" class="col-3 pl-0">AddScreen</label>
+                            <div class="form-control form-control-sm col-9 " style="height:320px">
+                                <div class="row">
+                                    <div class="col-11" style="text-align: right; padding-bottom:5px ;padding-right:0px">
+                                        <i class="btn glyphicon glyphicon-check" @onclick="@(() => AddDocItem(Screen))"></i>
+                                    </div>
+                                    <div class="col-1" style="text-align: right; padding-bottom:5px;padding-left:0px;padding-right:0px">
+                                        <i class="btn glyphicon glyphicon-refresh" @onclick="@(() => RefreshDoc())"></i>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12" style="padding-bottom: 5px; padding-right: 0px; padding-left: 0px">
+                                        <InputTextArea Class="form-control form-control-sm " style="padding-bottom:5px" @bind-Value="Screen.Comment" />
+                                        <ValidationMessage For="@(() => Screen.Comment)" />
+                                    </div>
+
+                                    <div class="col-12" style="padding-bottom:5px; text-align:left">
+                                        <InputFile style="display:none" Class="form-control form-control-sm " id="Screen" />
+                                    </div>
+
+                                    <div class="col-12" style="height:212px; border:dotted">
+                                        @if (temp != null)
+                                        {
+                                            <img style="width:450px;height:200px;text-align:center" src="data:image/bmp;base64, @(Convert.ToBase64String(temp))" />
+
+                                        }
+                                        else
+                                        {
+                                            <h2 style="text-align: center; color: lightgray; padding-top: 90px;">Add Image</h2>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        @foreach (var item in ViewModel.DocumentModel.Where(x => x.TaskId == ViewModel.Model.TaskId).ToList())
                         {
-                            <InputSelect @bind-Value="ViewModel.Model.TaskStatusId" Class="form-control form-control-sm ">
-                                <option value="@((int?)null)">---</option>
-                                @foreach (var selectValue in ViewModel.StatusModel)
+                            <table>
+                                <tbody>
+                                    @if (item.TaskDocumentId == 0)
                                     {
-                                    <option value="@selectValue.TaskStatusId">
-                                        @selectValue.StatusName
-                                    </option>
+                                        <tr class="form-control border-white" style="background-color:lemonchiffon">
+                                            <td width="400" style="text-align:left">@item.Comment</td>
+                                            <td width="30" style="text-align:center"></td>
+                                            <td width="30" style="text-align:center"></td>
+                                            <td width="30" style="text-align:center"><i class="btn glyphicon glyphicon-remove-circle" @onclick="@(() =>  ViewModel.DeleteFile(item.Comment))"></i></td>
+
+
+                                        </tr>
+
                                     }
-                            </InputSelect>
-                        }
-                        else
-                        {
-                            <InputSelect @bind-Value="ViewModel.Model.TaskStatusId" Class="form-control form-control-sm ">
-                                @foreach (var selectValue in ViewModel.StatusModel)
+                                    else
                                     {
-                                    <option value="@selectValue.TaskStatusId">
-                                        @selectValue.StatusName
-                                    </option>
+                                        <tr class="form-control border-white">
+
+                                            <td width="400" style="text-align:left">@item.Comment</td>
+                                            <td width="30" style="text-align:center"><i class=" btn glyphicon glyphicon-download" @onclick="@(()=>DownloadFileFromStream(item.TaskDocumentId))"></i></td>
+                                            <td width="30" style="text-align:center"><a href="@($"/CheckFile/{item.TaskDocumentId}")" target="_blank"><i class="btn glyphicon glyphicon-eye-open"></i></a></td>
+                                            <td width="30" style="text-align:center"><i class="btn glyphicon glyphicon-remove-circle" @onclick="@(() => ViewModel.DeleteFile(item.TaskDocumentId))"></i></td>
+
+                                        </tr>
                                     }
-                            </InputSelect>
+
+                                </tbody>
+                            </table>
                         }
                     </div>
                 </div>
-
-                <div class="form-group row mb-1">
-                    <label for="PlanDuration" class="col-3 pl-0">PlanDuration</label>
-                    <InputNumber @bind-Value="@ViewModel.Model.PlanDuration" Class="form-control form-control-sm col-5" step="0.01" min="0.01"></InputNumber>
-                    <ValidationMessage For="@(() => ViewModel.Model.PlanDuration)" />
-                </div>
-                <div class="form-group row mb-1">
-                    <label for="RealDuration" class="col-3 pl-0">RealDuration</label>
-                    <InputNumber @bind-Value="@ViewModel.Model.RealDuration" Class="form-control form-control-sm col-5" step="0.01" min="0.01"></InputNumber>
-                    <ValidationMessage For="@(() => ViewModel.Model.RealDuration)" />
-                </div>
-                <div class="form-group row mb-1">
-                    <label for="Description" class="col-3 pl-0">Description</label>
-                    <div class="col-9 btn-group mb-1" style="padding-left: 0px;padding-right: 0px;">
-                        <InputTextArea @bind-Value="@ViewModel.Model.Description" Class="form-control form-control-sm " id="Description" maxlength="500"></InputTextArea>
-                        <ValidationMessage For="@(() => ViewModel.Model.Description)" />
-                    </div>
-                </div>
-                <div class="form-group row mb-1">
-                    <label for="Screen" class="col-3 pl-0">AddScreen</label>
-                    <div class="col-9 btn-group mb-1" style="padding-left: 0px;padding-right: 0px;">
-                        <InputFile Class="form-control form-control-sm " id="Screen"></InputFile>
-
-                    </div>
-                </div>
-
             </MatDialogContent>
         </EditForm>
-        @if (temp != null)
-        {
-            <img src="data:image/bmp;base64, @(Convert.ToBase64String(temp))" />
 
-        }
     </MatDialog>
 </div>
 
 @code {
+
+
     [Parameter]
     public EditTaskItemViewModel ViewModel { get; set; }
 
-    public TaskDocumentItemViewModel Screen = new TaskDocumentItemViewModel();
+    public int DocId;
+    TaskDocumentItemViewModel Screen { get; set; } = new TaskDocumentItemViewModel();
+
     public ItemViewModel SaveFile = new ItemViewModel();
 
     [Parameter]
@@ -105,37 +178,83 @@
 
     [Parameter]
     public EventCallback<TaskItemViewModel> Reload { get; set; }
+
     private DotNetObjectReference<EditTask> objRef;
 
     [Inject] public IJSRuntime js { get; set; }
+
     protected override void OnParametersSet()
     {
         objRef = DotNetObjectReference.Create(this);
         js.InvokeVoidAsync("start", objRef);
 
     }
+
     byte[] temp = null;
 
     [JSInvokable("SingleUpload")]
 
     public async void SingleUpload(string e)
     {
+
+
         var t = e.Split(',');
         var Decoding = Convert.FromBase64String(t[1]);
         temp = Decoding;
-        var name = t[0].Split('/');
-        Screen.TaskDocumentId = 0;
-        Screen.FileName = name[1];
-        Screen.Answer = true;
-        Screen.Dokument = Decoding;
-        Screen.TaskId = ViewModel.Model.TaskId;
+        var name = t[0].Split(':');
+        var tmp = name[1].Split(';');
+        var p = tmp[0].ToArray();
+        string stname = null;
+        foreach (var item in p)
+        {
+            if (item == '/')
+            {
+                stname = stname + '.';
+            }
+            else
+            {
+                stname = stname + item;
+            }
 
-        CreateOrUpdate(Screen);
+        }
+        UpdateScreen(Decoding);
 
 
         StateHasChanged();
+
     }
 
+    public TaskDocumentItemViewModel UpdateScreen(byte[] param)
+    {
+        
+        Screen.TaskDocumentId = 0;
+        Screen.FileName = "image.png";
+        Screen.Answer = true;
+        Screen.Dokument = param;
+        Screen.TaskId = ViewModel.Model.TaskId;
+        return Screen;
+    }
 
+    public void AddDocItem(TaskDocumentItemViewModel item)
+    {
+        Screen = new TaskDocumentItemViewModel();
+        UpdateScreen(temp);
+        ViewModel.DocumentModel.Add(item);
+        StateHasChanged();
+    }
+
+    private void RefreshDoc()
+    {
+        Screen = new TaskDocumentItemViewModel();
+        temp = null;
+    }
+
+    private async System.Threading.Tasks.Task DownloadFileFromStream(int param)
+    {
+        var fileStream = ViewModel.GetFileStream(param);
+        var fileName = "image";
+        DocId = 0;
+        await js.InvokeVoidAsync("FileSaveAs", fileName, fileStream);
+    }
 }
 
