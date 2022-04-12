@@ -11,7 +11,6 @@ namespace TaskAlfa.Data.Services
     public class TaskDocumentService
     {
         private TaskDbContext _context;
-
         private EFGenericRepository<TaskDocument> TaskRepo;
         public TaskDocumentService(TaskDbContext _context)
         {

@@ -1,8 +1,8 @@
 ﻿@page "/BoardStatus"
 @using TaskAlfa.Pages.Task
 @inherits ItemViewModel
-<h3>Board</h3>
 
+<h3>Board</h3>
 <div class="row">
     @foreach (var item in StatusModel.OrderBy(x => x.OrderId).ToList())
     {
@@ -22,7 +22,6 @@
                         }
                     }
                 }
-
                 @if (count != 0)
                 {
                     <span>(@count)</span>
@@ -46,16 +45,13 @@
                     @if (item.Key == y.TaskStatusId)
                         @foreach (var i in item.Value.Where(x => x.TaskStatusId == item.Key).ToList())
                         {
-
                             <div @ondblclick="@(() => Edit(i))" style="width: -moz-available;display: inline-block;">
-
                                 <MatCard style="margin-bottom:10px" Class="fullsize">
                                     <MatCardContent>
                                         <MatHeadline6 class="p-1 mb-0">
                                             <div class="row">
                                                 <div class="col-7 p-0" style="font-size:14px">
                                                     @i.TaskName
-
                                                 </div>
                                                 @foreach (var y in DocumentModel.Where(x => x.TaskId == i.TaskId).ToList())
                                                 {
@@ -65,7 +61,6 @@
                                                     <i class="btn glyphicon glyphicon-file " title="@i.Filename" @onclick="@(() => {AddModel.TaskId = i.TaskId;dialogIsOpenAdd = true;updateOrCreateDilog.IsOpenUpdateOrCreate = true;})"></i>
                                                     <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
                                                     <i class="btn glyphicon glyphicon-trash cursor" @onclick="@(() => Remove(i))"></i>
-
                                                 </div>
                                             </div>
                                         </MatHeadline6>
@@ -77,26 +72,20 @@
                                                 </div>
                                                 @if (i.Description == null || i.Description == "")
                                                 {
-
                                                 }
                                                 else
                                                 {
                                                     <div class="col-5 text-right p-0" title="@i.Description">
-
                                                         <i class="glyphicon glyphicon-comment"></i>
-
                                                     </div>
                                                 }
                                             </div>
                                         </MatBody2>
                                     </MatCardContent>
                                 </MatCard>
-
                             </div>
                         }
                 }
-
-
             </div>
         }
     }
@@ -106,7 +95,6 @@
 {
     <EditTask ViewModel="@mEditViewModel" Save="@Save" Reload="@Reload" />
     <ConfirmationDialog Model=@ConfirmDialogModel Answer="@ConfirmRemove"/>
-
 }
 @if (dialogIsOpenAdd)
 {   

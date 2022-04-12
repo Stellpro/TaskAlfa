@@ -69,21 +69,12 @@ namespace TaskAlfa.Pages.TaskStatusTable
 
         }
         protected async System.Threading.Tasks.Task Remove(TaskStatusItemViewModel item)
-        {
-            try
-            {   
+        {    
                 item.IsDeleted = true;
                 ConfirmDialogModel.IsOpenConfirmation = true;
                 mCurrentItem = item;
-                await System.Threading.Tasks.Task.CompletedTask;
-
-                
-            }
-            catch (Exception e)
-            {
-            }
+                await System.Threading.Tasks.Task.CompletedTask;     
         }
-
         protected async System.Threading.Tasks.Task ConfirmRemove(bool answer)
         {
             try
@@ -112,11 +103,10 @@ namespace TaskAlfa.Pages.TaskStatusTable
             }
             catch (Exception e)
             {
-              
+
                 ExceprionProcessing(e, FunctionModelEnum.Restore, item, null);
             }
         }
-
         protected void Deleted()
         {
             ConfirmDialogModel.IsOpenConfirmation = true;
@@ -175,8 +165,6 @@ namespace TaskAlfa.Pages.TaskStatusTable
                 ExceprionProcessing(e, FunctionModelEnum.Save, mCurrentItem, mEditViewModel);
             }
         }
-
-
         public TaskStatusItemViewModel Update(TaskStatusItemViewModel item)
         {
             if (item.TaskStatusId == 0)
@@ -214,7 +202,6 @@ namespace TaskAlfa.Pages.TaskStatusTable
             mEditViewModel.IsConcurrencyError = false;
             mEditViewModel.DialogIsOpen = false;
         }
-       
         protected void Sort(KeyValuePair<string, string> pair)
         {
             StatusModel = pair.Value == "desc" ? StatusModel.OrderByDescending(x => x.GetType().GetProperty(pair.Key).GetValue(x, null)).ToList()

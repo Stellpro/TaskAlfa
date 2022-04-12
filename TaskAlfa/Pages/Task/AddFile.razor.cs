@@ -17,7 +17,6 @@ namespace TaskAlfa.Pages.Task
         public EventCallback dialogIsOpen { get; set; }
         [Parameter]
         public TaskDocumentItemViewModel AddModel { get; set; }
-
         public bool IsOpen = true;
         [Parameter]
         public EventCallback<TaskDocumentItemViewModel> SaveItem { get; set; }
@@ -26,7 +25,6 @@ namespace TaskAlfa.Pages.Task
         public int maxAllowedFiles = 1;
         public bool isLoading;
         public TaskDocumentItemViewModel UpLoadList = new TaskDocumentItemViewModel();
-
         public async System.Threading.Tasks.Task LoadFiles(InputFileChangeEventArgs e)
         {
             isLoading = true;
@@ -52,6 +50,5 @@ namespace TaskAlfa.Pages.Task
         {           
             dialogIsOpen.InvokeAsync();
         }
-
     }
 }

@@ -20,18 +20,11 @@
             <MatDialogContent>
                 <DataAnnotationsValidator />
                 <div>
-
-                    @*<EditUpdateErrorText IsShow="@ViewModel.IsConcurrencyError" Text="@Globals.ExceptionText[ExeptionTypeEnum.Concurrency]" />
-                        <EditUpdateErrorText IsShow="@(!string.IsNullOrEmpty(ViewModel.ErrorString))" Text="@ViewModel.ErrorString" />*@
-
                     <div class="form-group row mb-1">
                         <label for="StatuskName"  class="col-3 pl-0">TaskName</label>
                         <InputText @bind-Value="@ViewModel.TaskStatusModel.StatusName" Class="form-control form-control-sm col-5" id="Bezeichnung"></InputText>
                         <ValidationMessage For="@(() => ViewModel.TaskStatusModel.StatusName)" />
-                    </div>
-
-                    
-
+                    </div>                  
                     <div class="form-group row mb-1">
                         <label for="PlanDuration"  class="col-3 pl-0">OrderId</label>
                         <InputNumber @bind-Value="@ViewModel.TaskStatusModel.OrderId" Class="form-control form-control-sm col-5" id="Konto" step="0.01"></InputNumber>

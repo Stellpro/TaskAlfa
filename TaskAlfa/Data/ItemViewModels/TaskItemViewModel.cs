@@ -18,12 +18,10 @@ namespace TaskAlfa.Data.ItemViewModels
         {
             item = new TaskTable();
         }
-
         public TaskItemViewModel(TaskTable item)
         {
             this.item = item;
         }
-
         public int TaskId
         {
             get => item.TaskId;
@@ -63,8 +61,7 @@ namespace TaskAlfa.Data.ItemViewModels
             get => item.Description;
             set => item.Description = value;
         }
-        public string Filename;
-        
+        public string Filename; 
         public List<ChangeLog> ChangeLog { get; set; }
         public bool IsRefreshed { get; set; } = false;
         public object Clone()

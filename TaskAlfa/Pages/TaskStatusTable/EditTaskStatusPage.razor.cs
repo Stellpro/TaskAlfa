@@ -11,7 +11,6 @@ namespace TaskAlfa.Pages.TaskStatusTable
     {
         public bool DialogIsOpen { get; set; }
         public bool IsConcurrencyError { get; set; }
-
         public List<TaskStatusItemViewModel> StatusModel { get; set; }
         public TaskStatusItemViewModel TaskStatusModel { get; set; }
         public string ErrorString { get; set; }

@@ -6,7 +6,6 @@ namespace TaskAlfa.Data.Models
     {
         [Required]
         public string Message { get; set; }
-
         public string UserData { get; set; }
     }
 }

@@ -9,7 +9,6 @@ namespace TaskAlfa.Data.Models
         {
             mExeptionType = exeptionType;
         }
-
         public ExceptionByType(ExeptionTypeEnum exeptionType, string message) : base(message)
         {
             mExeptionType = exeptionType;

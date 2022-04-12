@@ -12,7 +12,7 @@ using TaskAlfa.PageModels.Interface;
 
 namespace TaskAlfa.Pages.Task
 {
-    public class EditTaskItemViewModel: IEditModel
+    public class EditTaskItemViewModel : IEditModel
     {
         public bool DialogIsOpen { get; set; }
         public TaskDocumentService DocumentService { get; set; }
@@ -38,59 +38,68 @@ namespace TaskAlfa.Pages.Task
                     Answer = item.Answer;
                     item.Answer = false;
                 }
+                try
+                {
+                    if (Answer)
+                    {
+                        var newItem = DocumentService.Create(item);
+                        if (newItem != null)
+                        {
+                            DocumentModel.Add(newItem);
+                            DocumentModel.Remove(item);
+                        }
+                    }
+                    else
+                    {
+                        var index = DocumentModel.FindIndex(x => x.TaskId == item.TaskId);
+                        item.TaskDocumentId = DocumentModel[index].TaskDocumentId;
+                        DocumentModel[index] = item;
+                        DocumentService.Update(item);
+                        dialogIsOpenAdd = false;
+                    }
+                }
+                catch (Exception e)
+                {
+                    IsConcurrencyError = true;
+                }
+            }
+        }
+        public void CreateOrUpdate(TaskDocumentItemViewModel item)
+        {
+            if (item.Answer)
+            {
+                Answer = item.Answer;
+                item.Answer = false;
+            }
+            try
+            {
                 if (Answer)
                 {
                     var newItem = DocumentService.Create(item);
                     if (newItem != null)
                     {
                         DocumentModel.Add(newItem);
-                        DocumentModel.Remove(item);
                     }
                 }
                 else
-                { 
-                        var index = DocumentModel.FindIndex(x => x.TaskId == item.TaskId);
-                        item.TaskDocumentId = DocumentModel[index].TaskDocumentId;
-                        DocumentModel[index] = item;
-                        DocumentService.Update(item);
-                        dialogIsOpenAdd = false;        
-                }
-            }
-
-
-        }
-        public void CreateOrUpdate(TaskDocumentItemViewModel item)
-        {
-
-            if (item.Answer)
-            {
-                Answer = item.Answer;
-                item.Answer = false;
-            }
-            if (Answer)
-            {
-                var newItem = DocumentService.Create(item);
-                if (newItem != null)
                 {
-                    DocumentModel.Add(newItem);
-                }
-            }
-            else
-            {                
                     var index = DocumentModel.FindIndex(x => x.TaskId == item.TaskId);
                     item.TaskDocumentId = DocumentModel[index].TaskDocumentId;
                     DocumentModel[index] = item;
                     DocumentService.Update(item);
                     dialogIsOpenAdd = false;
+                }
+            }
+            catch (Exception e)
+            {
+                IsConcurrencyError = true;
             }
         }
         public void DeleteFile(string param)
         {
-
             var deletDocument = DocumentModel.FirstOrDefault(x => x.Comment == param);
             DocumentModel.Remove(deletDocument);
             DocumentService.Remove(deletDocument);
-            
         }
         public void DeleteFile(int param)
         {
@@ -100,14 +109,11 @@ namespace TaskAlfa.Pages.Task
                 DocumentModel.Remove(deletDocument);
                 DocumentService.Remove(deletDocument);
             }
-
         }
         public byte[] GetFileStream(int id)
         {
             var param = DocumentModel.LastOrDefault(x => x.TaskDocumentId == id);
-
             var fileStream = param.Dokument;
-
             return fileStream;
         }
     }

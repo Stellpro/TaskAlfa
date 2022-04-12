@@ -34,10 +34,7 @@ namespace TaskAlfa.Pages.Task
 
         public TaskItemViewModel Isdelete;
 
-        public bool Answer;
-
         protected bool dialogIsOpen = false;
-
         public Dictionary<int, List<TaskItemViewModel>> BoardItem = new Dictionary<int, List<TaskItemViewModel>>();
 
         public ConfirmationDialogModel ConfirmDialogModel = new ConfirmationDialogModel()
@@ -74,21 +71,12 @@ namespace TaskAlfa.Pages.Task
                     DocumentModel = DocumentService.GetList();
                     StatusModel = StatusService.GetList();
                     CreateBoard(StatusModel);
-
-
-
                 }
 
                 catch (Exception e)
                 {
                     ExceprionProcessing(e, FunctionModelEnum.OnAfterRenderAsync, null, null);
-                }
-
-                finally
-                {
-
-
-                }
+                }            
             }
         }
         private void CreateBoard(List<TaskStatusItemViewModel> param)
@@ -134,9 +122,6 @@ namespace TaskAlfa.Pages.Task
         }
         protected async void StartSearchName()
         {
-
-
-
             try
             {
                 Model.Clear();
@@ -173,8 +158,6 @@ namespace TaskAlfa.Pages.Task
             mEditViewModel.DialogIsOpen = true;
             mEditViewModel.Model = mCurrentItem;
             StateHasChanged();
-
-
         }
         public void CreateItem()
         {
@@ -183,8 +166,6 @@ namespace TaskAlfa.Pages.Task
             mEditViewModel.StatusModel = StatusModel;
             mEditViewModel.DialogIsOpen = true;
             mEditViewModel.Model = mCurrentItem;
-
-
 
         }
         public void CreateReport()
@@ -241,15 +222,13 @@ namespace TaskAlfa.Pages.Task
         }
         protected async System.Threading.Tasks.Task Remove(TaskItemViewModel item)
         {
-            try
-            { 
+            
+            
                 ConfirmDialogModel.IsOpenConfirmation = true;
                 Isdelete = item;
                 await System.Threading.Tasks.Task.CompletedTask;
-            }
-            catch (Exception e)
-            {
-            }
+            
+           
         }
         protected async System.Threading.Tasks.Task ConfirmRemove(bool answer)
         {
@@ -260,8 +239,6 @@ namespace TaskAlfa.Pages.Task
                 UpdateBoard(StatusModel);
                 StateHasChanged();
                 await System.Threading.Tasks.Task.CompletedTask;
-
-
             }
         }
         protected void Restore(TaskItemViewModel item)
@@ -277,23 +254,17 @@ namespace TaskAlfa.Pages.Task
 
                 ExceprionProcessing(e, FunctionModelEnum.Restore, item, null);
             }
-        }
-        protected void Deleted()
-        {
-            ConfirmDialogModel.IsOpenConfirmation = true;
-        }
+        }    
         protected void Save(TaskItemViewModel item)
         {
             try
             {
-
                 if (item.TaskId > 0)
                 {
                     var newItem = UpdateTask(item);
                     var index = Model.FindIndex(x => x.TaskId == this.mCurrentItem.TaskId);
                     Model[index] = newItem;
                     UpdateBoard(StatusModel);
-
                 }
                 else
                 {
@@ -302,7 +273,6 @@ namespace TaskAlfa.Pages.Task
                     {
                         Model.Add(newItem);
                         UpdateBoard(StatusModel);
-
                     }
                 }
                 if (mEditViewModel.IsConcurrencyError)
@@ -312,13 +282,13 @@ namespace TaskAlfa.Pages.Task
                 else
                 {
                     mEditViewModel.DialogIsOpen = false;
-
                 }
-
             }
             catch (Exception e)
-            {
+            {   
+                
                 mCurrentItem = item;
+                mEditViewModel.IsConcurrencyError = true;
                 ExceprionProcessing(e, FunctionModelEnum.Save, mCurrentItem, mEditViewModel);
             }
             StateHasChanged();
@@ -345,8 +315,6 @@ namespace TaskAlfa.Pages.Task
                 mEditViewModel.IsConcurrencyError = true;
                 return mCurrentItem = Service.Reload(item.Item);
             }
-
-
         }
         public void Reload()
         {

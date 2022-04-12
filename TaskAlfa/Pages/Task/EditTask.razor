@@ -2,14 +2,12 @@
 @using System.IO;
 @using System.Text;
 
-
 <div>
     <MatDialog @bind-IsOpen="@ViewModel.DialogIsOpen" CanBeClosed="false">
         <EditForm Model="ViewModel.Model" OnValidSubmit="@(e => { Save.InvokeAsync(ViewModel.Model);UpdateScreen(temp); ViewModel.CreateOrUpdate(ViewModel.DocumentModel); })" style="width:1080px">
             <MatDialogTitle class="diHeader">
                 <h3>Task</h3>
                 <div class="btn-group">
-
                     @if (ViewModel.IsConcurrencyError)
                     {<MatDialog @bind-IsOpen="@ViewModel.IsConcurrencyError" CanBeClosed="false">
                             <span class="btn btn-nav btn-primary mr-1" @onclick="@(e => Reload.InvokeAsync(ViewModel.Model))">Please Reload. This entry has been changed</span>
@@ -38,7 +36,6 @@
                             <InputText @bind-Value="@ViewModel.Model.TaskName" Class="form-control form-control-sm col-5" id="Bezeichnung"></InputText>
                             <ValidationMessage For="@(() => ViewModel.Model.TaskName)" />
                         </div>
-
                         <div class="form-group row mb-1">
                             <label class="col-3 pl-0">Statuse</label>
                             <div class="col-9 btn-group mb-1" style="padding-left: 0px;padding-right: 0px;">
@@ -134,15 +131,12 @@
                                             <td width="30" style="text-align:center"></td>
                                             <td width="30" style="text-align:center"></td>
                                             <td width="30" style="text-align:center"><i class="btn glyphicon glyphicon-remove-circle" @onclick="@(() =>  ViewModel.DeleteFile(item.Comment))"></i></td>
-
-
                                         </tr>
 
                                     }
                                     else
                                     {
                                         <tr class="form-control border-white">
-
                                             <td width="400" style="text-align:left">@item.Comment</td>
                                             <td width="30" style="text-align:center"><i class=" btn glyphicon glyphicon-download" @onclick="@(()=>DownloadFileFromStream(item.TaskDocumentId))"></i></td>
                                             <td width="30" style="text-align:center"><a href="@($"/CheckFile/{item.TaskDocumentId}")" target="_blank"><i class="btn glyphicon glyphicon-eye-open"></i></a></td>
@@ -163,8 +157,6 @@
 </div>
 
 @code {
-
-
     [Parameter]
     public EditTaskItemViewModel ViewModel { get; set; }
 
@@ -196,8 +188,6 @@
 
     public async void SingleUpload(string e)
     {
-
-
         var t = e.Split(',');
         var Decoding = Convert.FromBase64String(t[1]);
         temp = Decoding;
@@ -215,18 +205,13 @@
             {
                 stname = stname + item;
             }
-
         }
         UpdateScreen(Decoding);
-
-
         StateHasChanged();
-
     }
 
     public TaskDocumentItemViewModel UpdateScreen(byte[] param)
-    {
-        
+    {      
         Screen.TaskDocumentId = 0;
         Screen.FileName = "image.png";
         Screen.Answer = true;

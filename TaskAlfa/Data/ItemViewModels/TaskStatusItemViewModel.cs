@@ -18,7 +18,6 @@ namespace TaskAlfa.Data.ItemViewModels
         {
             item = new TaskStatus();
         }
-
         public TaskStatusItemViewModel(TaskStatus item)
         {
             this.item = item;

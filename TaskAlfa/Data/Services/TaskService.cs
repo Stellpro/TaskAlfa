@@ -15,13 +15,10 @@ namespace TaskAlfa.Data.Services
         private TaskDbContext _context;
 
         private EFGenericRepository<TaskTable> TaskRepo;
-        
-
         public TaskService(TaskDbContext _context)
         {
             this._context = _context;
             TaskRepo = new EFGenericRepository<TaskTable>(_context);
-
         }
         public TaskItemViewModel Convert(TaskTable model)
         {
@@ -40,8 +37,6 @@ namespace TaskAlfa.Data.Services
             x.PlanDuration = item.PlanDuration;
             x.RealDuration = item.RealDuration;
             x.Description = item.Description;
-            //x.FileName = item.FileName;
-            //x.Dokument = item.Dokument;
             return Convert(TaskRepo.Update(x, item.Item.RowVersion));
         }
         public TaskItemViewModel UpdateIsDelete(TaskItemViewModel item)
@@ -49,8 +44,7 @@ namespace TaskAlfa.Data.Services
             var isDelete = item.IsDeleted;
             var x = TaskRepo.FindByIdForReload(item.TaskId);
             if (x == null)
-            {
-                
+            {         
             }
             x.IsDeleted = isDelete;
             return Convert(TaskRepo.Update(x, item.Item.RowVersion));
@@ -79,16 +73,10 @@ namespace TaskAlfa.Data.Services
         }
         public TaskItemViewModel Create(TaskItemViewModel item)
         {
-
-
             var newitem =
             TaskRepo.Create(item.Item);
             return Convert(newitem);
-
-
         }
-       
-
         public List<TaskItemViewModel> GetList()
         {
             List<TaskItemViewModel> list = TaskRepo.GetQuery().ToList().Select(x => Convert(x)).ToList();

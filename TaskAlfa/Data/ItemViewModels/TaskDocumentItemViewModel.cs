@@ -18,7 +18,6 @@ namespace TaskAlfa.Data.ItemViewModels
         {
             item = new TaskDocument();
         }
-
         public TaskDocumentItemViewModel(TaskDocument item)
         {
             this.item = item;
