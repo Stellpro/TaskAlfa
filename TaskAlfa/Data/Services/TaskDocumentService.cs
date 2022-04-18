@@ -16,7 +16,6 @@ namespace TaskAlfa.Data.Services
         {
             this._context = _context;
             TaskRepo = new EFGenericRepository<TaskDocument>(_context);
-
         }
         public TaskDocumentItemViewModel Convert(TaskDocument model)
         {
@@ -24,8 +23,7 @@ namespace TaskAlfa.Data.Services
         }
         public TaskDocumentItemViewModel Update(TaskDocumentItemViewModel item)
         {
-            var x = TaskRepo.FindByIdForReload(item.TaskDocumentId);
-            
+            var x = TaskRepo.FindByIdForReload(item.TaskDocumentId);          
             x.FileName = item.FileName;
             x.Dokument = item.Dokument;
             x.Comment = item.Comment;
@@ -33,13 +31,9 @@ namespace TaskAlfa.Data.Services
         }
         public TaskDocumentItemViewModel Create(TaskDocumentItemViewModel item)
         {
-
-
             var newitem =
             TaskRepo.Create(item.Item);
             return Convert(newitem);
-
-
         }
         public List<TaskDocumentItemViewModel> GetList()
         {

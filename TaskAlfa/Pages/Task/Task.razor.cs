@@ -19,26 +19,19 @@ namespace TaskAlfa.Pages.Task
 {
     public class ItemViewModel : BaseViewModel
     {
-        public bool dialogIsOpenAdd { get; set; }
         [Inject] private TaskService Service { get; set; }
         [Inject] private TaskDocumentService DocumentService { get; set; }
         [Inject] private TaskStatusService StatusService { get; set; }
+        public bool dialogIsOpenAdd { get; set; }
         public List<TaskItemViewModel> Model { get; set; } = new List<TaskItemViewModel>();
         public List<TaskDocumentItemViewModel> DocumentModel { get; set; } = new List<TaskDocumentItemViewModel>();
         public TaskDocumentItemViewModel AddModel { get; set; } = new TaskDocumentItemViewModel();
         public List<TaskStatusItemViewModel> StatusModel { get; set; } = new List<TaskStatusItemViewModel>();
-
-        protected EditTaskItemViewModel mEditViewModel = new EditTaskItemViewModel();
-
+        protected EditTaskView mEditView = new EditTaskView();
         public TaskItemViewModel mCurrentItem;
-
         public TaskItemViewModel Isdelete;
-
-        protected bool dialogIsOpen = false;
         public Dictionary<int, List<TaskItemViewModel>> BoardItem = new Dictionary<int, List<TaskItemViewModel>>();
-
         public ConfirmationDialogModel ConfirmDialogModel = new ConfirmationDialogModel()
-
         {
             IsOpenConfirmation = false,
             Text = "Are you sure?",
@@ -76,7 +69,7 @@ namespace TaskAlfa.Pages.Task
                 catch (Exception e)
                 {
                     ExceprionProcessing(e, FunctionModelEnum.OnAfterRenderAsync, null, null);
-                }            
+                }
             }
         }
         private void CreateBoard(List<TaskStatusItemViewModel> param)
@@ -150,31 +143,27 @@ namespace TaskAlfa.Pages.Task
 
             var index = StatusModel.FindIndex(x => x.TaskStatusId == i);
             mCurrentItem = new TaskItemViewModel();
-            mEditViewModel.StatusModel = StatusModel;
-            mEditViewModel.TaskStatusIdModel = StatusModel[index];
+            mEditView.StatusModel = StatusModel;
+            mEditView.TaskStatusIdModel = StatusModel[index];
             mCurrentItem.TaskStatusId = StatusModel[index].TaskStatusId;
-            mEditViewModel.DocumentModel = DocumentModel;
-            mEditViewModel.DocumentService = DocumentService;
-            mEditViewModel.DialogIsOpen = true;
-            mEditViewModel.Model = mCurrentItem;
+            mEditView.DocumentModel = DocumentModel;
+            mEditView.DocumentService = DocumentService;
+            mEditView.DialogIsOpen = true;
+            mEditView.Model = mCurrentItem;
             StateHasChanged();
         }
         public void CreateItem()
         {
-
             mCurrentItem = new TaskItemViewModel();
-            mEditViewModel.StatusModel = StatusModel;
-            mEditViewModel.DialogIsOpen = true;
-            mEditViewModel.Model = mCurrentItem;
-
+            mEditView.StatusModel = StatusModel;
+            mEditView.DialogIsOpen = true;
+            mEditView.Model = mCurrentItem;
         }
         public void CreateReport()
         {
             TaskAlfaReportModel model = new TaskAlfaReportModel();
             model.Block = GetTaskReportList();
-
             byte[] file = new XtraReportEngine().CreateAnschreibenEmpfehlungReport(model, 2);
-
             System.IO.File.WriteAllBytes(@"C:\Users\stellpro\Desktop\TaskAlfa.pdf", file);
         }
         private List<TaskAlfaItemReportModel> GetTaskReportList()
@@ -195,11 +184,11 @@ namespace TaskAlfa.Pages.Task
         public void Edit(TaskItemViewModel param1)
         {
             mCurrentItem = param1.Clone() as TaskItemViewModel;
-            mEditViewModel.StatusModel = StatusModel;
-            mEditViewModel.Model = mCurrentItem;
-            mEditViewModel.DocumentModel = DocumentModel;
-            mEditViewModel.DocumentService = DocumentService;
-            mEditViewModel.DialogIsOpen = true;
+            mEditView.StatusModel = StatusModel;
+            mEditView.Model = mCurrentItem;
+            mEditView.DocumentModel = DocumentModel;
+            mEditView.DocumentService = DocumentService;
+            mEditView.DialogIsOpen = true;
 
         }
         protected void RemoveTask(TaskItemViewModel item)
@@ -212,23 +201,18 @@ namespace TaskAlfa.Pages.Task
                 {
                     DocumentService.Remove(i);
                 }
-
                 Model.Remove(item);
-
             }
             catch (Exception e)
             {
+                ExceprionProcessing(e, FunctionModelEnum.Remove, item, null);
             }
         }
         protected async System.Threading.Tasks.Task Remove(TaskItemViewModel item)
         {
-            
-            
-                ConfirmDialogModel.IsOpenConfirmation = true;
-                Isdelete = item;
-                await System.Threading.Tasks.Task.CompletedTask;
-            
-           
+            ConfirmDialogModel.IsOpenConfirmation = true;
+            Isdelete = item;
+            await System.Threading.Tasks.Task.CompletedTask;
         }
         protected async System.Threading.Tasks.Task ConfirmRemove(bool answer)
         {
@@ -246,15 +230,13 @@ namespace TaskAlfa.Pages.Task
             try
             {
                 item.IsDeleted = false;
-
                 StateHasChanged();
             }
             catch (Exception e)
             {
-
                 ExceprionProcessing(e, FunctionModelEnum.Restore, item, null);
             }
-        }    
+        }
         protected void Save(TaskItemViewModel item)
         {
             try
@@ -275,21 +257,21 @@ namespace TaskAlfa.Pages.Task
                         UpdateBoard(StatusModel);
                     }
                 }
-                if (mEditViewModel.IsConcurrencyError)
+                if (mEditView.IsConcurrencyError)
                 {
                     StateHasChanged();
                 }
                 else
                 {
-                    mEditViewModel.DialogIsOpen = false;
+                    mEditView.DialogIsOpen = false;
                 }
             }
             catch (Exception e)
-            {   
-                
+            {
+
                 mCurrentItem = item;
-                mEditViewModel.IsConcurrencyError = true;
-                ExceprionProcessing(e, FunctionModelEnum.Save, mCurrentItem, mEditViewModel);
+                mEditView.IsConcurrencyError = true;
+                ExceprionProcessing(e, FunctionModelEnum.Save, mCurrentItem, mEditView);
             }
             StateHasChanged();
         }
@@ -311,15 +293,15 @@ namespace TaskAlfa.Pages.Task
             }
             catch (DbUpdateConcurrencyException e)
             {
-                ExceprionProcessing(e, FunctionModelEnum.Update, mCurrentItem, mEditViewModel, "Update");
-                mEditViewModel.IsConcurrencyError = true;
+                ExceprionProcessing(e, FunctionModelEnum.Update, mCurrentItem, mEditView, "Update");
+                mEditView.IsConcurrencyError = true;
                 return mCurrentItem = Service.Reload(item.Item);
             }
         }
         public void Reload()
         {
-            mEditViewModel.IsConcurrencyError = false;
-            mEditViewModel.DialogIsOpen = false;
+            mEditView.IsConcurrencyError = false;
+            mEditView.DialogIsOpen = false;
         }
         protected void Trash(TaskItemViewModel item)
         {

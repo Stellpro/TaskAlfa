@@ -42,71 +42,74 @@
         <tbody>
             @foreach (var i in Model)
             {
-                <tr>
-                    <td width="100">@i.TaskId</td>
-                    <td width="100" style="text-align:center">
-                        @i.TaskName
-                    </td>
-                    <td width="100" style="text-align:center">
-                        @i.PlanDuration
-                    </td>
-                    <td width="100" style="text-align:center">
-                        @i.RealDuration
-                    </td>
-                    <td width="100" style="text-align:center">
-                        @StatusModel.FirstOrDefault(x => x.TaskStatusId == i.TaskStatusId).StatusName
-                    </td>
-                    @if (i.Description == null || i.Description == "")
-                    {
-                        <td width="30"></td>
-                    }
-                    else
-                    {
-                        <div class="col-5 text-right p-0" title="@i.Description">
+            <tr>
+                <td width="100">@i.TaskId</td>
+                <td width="100" style="text-align:center">
+                    @i.TaskName
+                </td>
+                <td width="100" style="text-align:center">
+                    @i.PlanDuration
+                </td>
+                <td width="100" style="text-align:center">
+                    @i.RealDuration
+                </td>
+                <td width="100" style="text-align:center">
+                    @StatusModel.FirstOrDefault(x => x.TaskStatusId == i.TaskStatusId).StatusName
+                </td>
+                @if (i.Description == null || i.Description == "")
+                {
+                    <td width="30"></td>
+                }
+                else
+                {
+            <td width="30" style=" text-align:center" >
+                <div class=" text-center p-0" title="@i.Description">
 
-                            <i class="glyphicon glyphicon-comment"></i>
-                        </div>
-                    }
-                    @foreach (var item in DocumentModel.Where(x=>x.TaskId==i.TaskId).ToList())
-                    {
-                        i.Filename = i.Filename + item.FileName + "; ";
-                    }  
-                    @if (i.Filename == null )
-                        {
-                            <td width="30"></td>
-                        }
-                        else
-                        {
-                            <td width="30" align="center" title="@i.Filename">
-                                <i class=" glyphicon glyphicon-file"></i>
-                            </td>                          
-                        }                 
+                    <i class="glyphicon glyphicon-comment"></i>
+                </div>
+            </td>
+                }
+                @foreach (var item in DocumentModel.Where(x => x.TaskId == i.TaskId).ToList())
+                {
+                    i.Filename = i.Filename + item.FileName + "; ";
+                }
+                @if (i.Filename == null)
+                {
+                    <td width="30"></td>
+                }
+                else
+                {
+                    <td width="30" align="center" title="@i.Filename">
+                        <i class=" glyphicon glyphicon-file"></i>
+                    </td>
+
+                }
+                <td width="30" align="center">
+                    <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
+                </td>
+
+                @if (!i.IsDeleted)
+                {
                     <td width="30" align="center">
-                        <i class="btn glyphicon glyphicon-edit " @onclick="@(() => Edit(i))"></i>
+                        <i class="btn glyphicon glyphicon-trash cursor align-middle" @onclick="@(() => Trash(i))"></i>
                     </td>
-
-                    @if (!i.IsDeleted)
-                    {
-                        <td width="30" align="center">
-                            <i class="btn glyphicon glyphicon-trash cursor align-middle" @onclick="@(() => Trash(i))"></i>
-                        </td>
-                    }
-                    else
-                    {
-                        <td width="30">
-                            <i class="btn glyphicon glyphicon-refresh cursor align-middle" @onclick="@(() => Restore(i))"></i>
-                            <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => RemoveTask(i))"></i>
-                        </td>
-                    }
-                </tr>
+                }
+                else
+                {
+                    <td width="30">
+                        <i class="btn glyphicon glyphicon-refresh cursor align-middle" @onclick="@(() => Restore(i))"></i>
+                        <i class="btn glyphicon glyphicon-remove-circle cursor align-middle" @onclick="@(() => RemoveTask(i))"></i>
+                    </td>
+                }
+            </tr>
             }
         </tbody>
     </table>
 }
 
-@if (mEditViewModel.DialogIsOpen != null && mCurrentItem != null)
+@if (mEditView.DialogIsOpen != null && mCurrentItem != null)
 {
-    <EditTask ViewModel="@mEditViewModel"  Save="@Save" Reload="@Reload" />
+    <EditTask View="@mEditView"  Save="@Save" Reload="@Reload" />
 }
 
 

@@ -91,15 +91,15 @@
     }
 
 </div>
-@if (mEditViewModel.DialogIsOpen != null && mCurrentItem != null)
+@if (mEditView.DialogIsOpen != null && mCurrentItem != null)
 {
-    <EditTask ViewModel="@mEditViewModel" Save="@Save" Reload="@Reload" />
+    <EditTask View="@mEditView" Save="@Save" Reload="@Reload" />
     <ConfirmationDialog Model=@ConfirmDialogModel Answer="@ConfirmRemove"/>
 }
 @if (dialogIsOpenAdd)
 {   
-    <AddFile SaveItem="@mEditViewModel.CreateOrUpdate" AddModel="@AddModel" dialogIsOpen="@DialogClose"></AddFile>
-    <UpdateOrCreateDilog ModelDilog=@updateOrCreateDilog Answer="@mEditViewModel.ConfirmCeate"></UpdateOrCreateDilog>
+    <AddFile SaveItem="@mEditView.CreateOrUpdate" AddModel="@AddModel" dialogIsOpen="@DialogClose"></AddFile>
+    <UpdateOrCreateDilog ModelDilog=@updateOrCreateDilog Answer="@mEditView.ConfirmCreate"></UpdateOrCreateDilog>
 }
 @code{
     

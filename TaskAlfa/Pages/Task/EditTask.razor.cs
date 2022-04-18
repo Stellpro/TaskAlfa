@@ -12,7 +12,7 @@ using TaskAlfa.PageModels.Interface;
 
 namespace TaskAlfa.Pages.Task
 {
-    public class EditTaskItemViewModel : IEditModel
+    public class EditTaskView : IEditModel
     {
         public bool DialogIsOpen { get; set; }
         public TaskDocumentService DocumentService { get; set; }
@@ -24,7 +24,7 @@ namespace TaskAlfa.Pages.Task
         public TaskStatusItemViewModel TaskStatusIdModel { get; set; }
         public bool dialogIsOpenAdd { get; set; }
         public string ErrorString { get; set; }
-        public void ConfirmCeate(bool answer)
+        public void ConfirmCreate(bool answer)
         {
             Answer = answer;
         }
@@ -64,6 +64,7 @@ namespace TaskAlfa.Pages.Task
                 }
             }
         }
+
         public void CreateOrUpdate(TaskDocumentItemViewModel item)
         {
             if (item.Answer)

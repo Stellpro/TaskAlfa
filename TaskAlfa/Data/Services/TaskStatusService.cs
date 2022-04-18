@@ -37,20 +37,8 @@ namespace TaskAlfa.Data.Services
         }
         public TaskStatusItemViewModel Create(TaskStatusItemViewModel item)
         {
-            var newitem =
-            TaskStatusRepo.Create(item.Item);
+            var newitem =TaskStatusRepo.Create(item.Item);
             return Convert(newitem);
-        }
-
-        public TaskStatusItemViewModel UpdateIsDelete(TaskStatusItemViewModel item)
-        {
-            var isDelete = item.IsDeleted;
-            var x = TaskStatusRepo.FindByIdForReload(item.TaskStatusId);
-            if (x == null)
-            {
-            }
-            x.IsDeleted = isDelete;
-            return Convert(TaskStatusRepo.Update(x, item.Item.RowVersion));
         }
         public void Remove(TaskStatusItemViewModel item)
         {

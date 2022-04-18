@@ -89,8 +89,7 @@ namespace TaskAlfa.Pages.TaskStatusTable
             }
             catch (Exception e)
             {
-
-                ConfirmDialogModel.PrimaryKey = true;
+               ConfirmDialogModel.PrimaryKey = true;
             }
         }
         protected void Restore(TaskStatusItemViewModel item)
@@ -98,12 +97,10 @@ namespace TaskAlfa.Pages.TaskStatusTable
             try
             {
                 item.IsDeleted = false;
-
                 StateHasChanged();
             }
             catch (Exception e)
             {
-
                 ExceprionProcessing(e, FunctionModelEnum.Restore, item, null);
             }
         }
@@ -169,32 +166,23 @@ namespace TaskAlfa.Pages.TaskStatusTable
         {
             if (item.TaskStatusId == 0)
             {
-
                 return item;
-
             }
             else
             {
-
                 try
                 {
                     var index = StatusModel.FindIndex(x => x.TaskStatusId == item.TaskStatusId);
                     StatusModel[index] = item;
                     return StatusService.Update(item);
-
-
                 }
-
-
                 catch (DbUpdateConcurrencyException e)
                 {
                     ExceprionProcessing(e, FunctionModelEnum.Update, mCurrentItem, mEditViewModel, "Update");
 
                     mEditViewModel.IsConcurrencyError = true;
                     return mCurrentItem;
-
                 }
-
             }
         }
         public void Reload()

@@ -42,10 +42,7 @@ namespace TaskAlfa.Data.Services
         public TaskItemViewModel UpdateIsDelete(TaskItemViewModel item)
         {
             var isDelete = item.IsDeleted;
-            var x = TaskRepo.FindByIdForReload(item.TaskId);
-            if (x == null)
-            {         
-            }
+            var x = TaskRepo.FindByIdForReload(item.TaskId);     
             x.IsDeleted = isDelete;
             return Convert(TaskRepo.Update(x, item.Item.RowVersion));
         }
