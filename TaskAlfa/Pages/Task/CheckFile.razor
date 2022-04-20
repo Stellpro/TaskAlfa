@@ -1,10 +1,10 @@
 ﻿@page "/CheckFile/{DocId:int}"
+@using TaskAlfa.Data.ItemViewModels
+@using TaskAlfa.Data.Services
 
     <img src="data:image/bmp;base64, @(Convert.ToBase64String(ScreenView))" />
 
-@code {
-    @using TaskAlfa.Data.ItemViewModels
-    @using TaskAlfa.Data.Services
+@code{
     [Parameter]
     public int DocId { get; set; }
     [Inject] private TaskDocumentService DocumentService { get; set; }

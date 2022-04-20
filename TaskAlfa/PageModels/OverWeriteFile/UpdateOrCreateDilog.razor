@@ -1,4 +1,5 @@
 ﻿@using MatBlazor
+
 <MatDialog @bind-IsOpen="@ModelDilog.IsOpenUpdateOrCreate" CanBeClosed="false">
     <div class="pl-3 pt-3 pr-3 pb-0">
         <h3>File</h3>
@@ -18,10 +19,11 @@
         </div>
     </MatDialogContent>
 </MatDialog>
+
 @code
 {
     [Parameter]
     public UpdateOrCreateDilogModel ModelDilog { get; set; }
     [Parameter]
     public EventCallback<bool> Answer { get; set; }
- }
+}
